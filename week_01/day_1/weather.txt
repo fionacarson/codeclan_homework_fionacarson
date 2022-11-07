@@ -3,3 +3,4 @@ wind
 sun
 snow
 Sleet
+Rainbow
