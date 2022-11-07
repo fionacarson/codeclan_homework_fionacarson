@@ -1,0 +1,4 @@
+rain
+wind
+sun
+snow
