@@ -2,3 +2,5 @@ Cobalt
 Zinc
 Platinum
 Ruthenium
+Chlorine
+Iron

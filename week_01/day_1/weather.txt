@@ -2,3 +2,4 @@ rain
 wind
 sun
 snow
+Sleet
