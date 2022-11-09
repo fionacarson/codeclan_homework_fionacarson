@@ -1,0 +1,142 @@
+---
+title: "Day 3 Homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+movies <- read_csv("movies.csv")
+```
+
+**Question 1**
+Ideas for investigating data:
+- Is there a way to find the rows where 'title' and 'original_title' are different?
+- Column names are all in an acceptable format so no work needed there
+- revenue and budget both relate to money but the numbers are formatted differently,
+could convert so they match
+- orignal language should be changed to be more clear (am assuming en = english)
+- popularity would be better if it were on a clearer scale e.g. out of 100
+- check dates in release dates are all the same format
+- there's some NA and zero values in various columns which may need dealt with
+before further analysis
+
+**Question 2**
+
+```{r}
+# having a look at the movies which have different entries in the 'title' and 
+# original_title columns
+
+movies %>% 
+  filter(title != original_title)
+
+# a lot of the entires in original_title are in a language other than English
+# as we are working in English lets use the 'title' variable going forward
+
+```
+
+```{r}
+movies_selected <- movies %>% 
+  select(title, runtime, budget)
+movies_selected
+```
+
+**Question 3**
+
+```{r}
+# how many NA values are there in the movies_selected dataframe?
+sum(is.na(movies_selected))
+# there are 2, lets find which columns they are in 
+
+movies_selected %>% 
+  filter(is.na(title)) %>% 
+  summarise(title_NAs = n()) 
+# there are no NAs in the title column
+
+movies_selected %>% 
+  filter(is.na(runtime)) %>% 
+  summarise(runtime_NAs = n())
+# there are 2 NAs in runtime column
+
+movies_selected %>% 
+  filter(is.na(budget)) %>% 
+  summarise(budget_NAs = n())
+# as expected there are no NAs in budget
+
+# this seems like a convoluted way of doing this, must be a quicker way?
+```
+
+**Question 4**
+
+```{r}
+movies_runtime <- movies_selected %>% 
+  mutate(runtime = na_if(runtime, 0))
+
+movies_runtime %>% 
+  filter(is.na(runtime)) %>% 
+  summarise(runtime_NAs = n())
+```
+Now there are 37 NAs in runtime
+
+**Question 5**
+
+
+
+```{r}
+movies_imputed <- movies_runtime %>%
+  mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
+  
+movies_imputed %>% 
+  filter(is.na(runtime)) %>% 
+  summarise(runtime_NAs = n())
+```
+
+**Question 6**
+
+```{r}
+movies_imputed %>% 
+  arrange(runtime) %>% 
+  head(10)
+```
+
+```{r}
+movies_imputed %>% 
+  arrange(desc(runtime)) %>% 
+  head(10)
+```
+
+**Question 7**
+
+```{r}
+movies_imputed <- movies_imputed %>% 
+  mutate(budget = if_else(budget < 100, median(budget), budget))
+```
+
+**EXTENSION**
+**Question 1**
+
+```{r}
+movie_budgets <- movies_imputed %>% 
+  mutate(budget_type = case_when(
+    budget < 12000000 ~ "Small budget",
+    budget < 40000000 ~ "Medium budget",
+    TRUE ~ "Big budget"
+  ))
+```
+
+**Question 2**
+
+
+
+```{r}
+movies %>% 
+  summarise(sum(is.na(across(where(is.character)))))
+```
+
+```{r}
+movies %>% 
+  summarise(sum(is.na(across(where(is.numeric)))))
+```
+
