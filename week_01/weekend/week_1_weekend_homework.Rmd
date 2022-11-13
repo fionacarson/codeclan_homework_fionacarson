@@ -1,0 +1,267 @@
+---
+title: "Week 1 - Weekend Homework"
+output:
+  html_document:
+    df_print: paged
+---
+ 
+```{r echo=T, results='hide'}
+library(tidyverse)
+library(skimr)
+```
+
+```{r}
+books <- read_csv("data/books.csv")
+```
+
+__Investigating Data__
+```{r}
+glimpse(books)
+```
+```{r}
+skim(books)
+```
+
+Wow, no missing values! But I spotted some author entries which said "NOT A BOOK" so there are some dodgy values present. Further investigation showed there were only five "NOT A BOOK" entries so probably not a big issue. 
+
+```{r}
+summary(books)
+```
+Would like to know how many different authors, languages and publishers
+```{r}
+num_authors <- books %>% 
+  distinct(authors) %>% 
+  nrow() 
+print(paste("The number of unique authors (or author combinations) is", num_authors))
+
+# thought there might be some duplicates in the language column e.g. it might say 'eng' and 'english' but a quick check through shows it all makes sense
+num_languages <- books %>% 
+  distinct(language_code) %>% 
+  nrow() 
+print(paste("The number of languages is", num_languages))
+
+num_publishers <- books %>% 
+  distinct(publisher) %>% 
+  nrow() 
+print(paste("The number of publishers is", num_publishers))
+```
+
+The number of publishers is definitely an over-estimation as a quick scan through the data shows the same publisher written in different ways e.g. "Farrar Strauss and Giroux" and "Farrar Strauss Giroux".
+
+
+_FC Question - how would you deal with this publisher issue if this was important. Is manually changing them the only option?_
+
+# Ideas Investigated
+
+1. What are the top rated and lowest rated books?    
+2. What books have the most ratings?    
+3. What length of book gets the highest average rating?    
+4. Top book for each year?   
+5. Highest rated author / lowest rated author?    
+6. Which author has the most books on the list?  
+7. Which publisher has published the most books?
+8. Which publisher has the best rating? 
+
+
+Other ideas not investigated:  
+a) Average points by number of ratings e.g. 0 - 10000 ratings gives 4.2 points - NOT DONE (after Q3 showed no interesting results didn't think it was worth doing this one)  
+b) Compare results of books I've read with ratings in table - NOT DONE (possibly need to learn joins for this)
+  
+    
+    
+Selecting columns of interest and creating new dataset
+```{r}
+# removing rowid, bookID, isbn and isbn13 as I don't think the ID or isbn values will provide much to investigate. 
+
+books_subset <- books %>% 
+  select(-rowid, -bookID, -isbn, -isbn13, )
+
+```
+  
+    
+    
+
+__1. Five top rated and five lowest rated books?__
+```{r}
+books_subset %>% 
+  slice_max(average_rating, n = 5)
+```
+Ok, so this isn't as straightforward as it seemed. There are a lot of average ratings that are 5 but they are based on low numbers of reviews (all 5 reviews or less). At least one book even has a 0 rating count and average rating of 5. I'd love to draw a graph of this!!
+
+```{r}
+# the first quartile of the ratings count is 104 so lets pick 100 as the minimum number of ratings we will accept for this analysis. This will remove about a quarter of the data. 
+
+books_subset %>% 
+  filter(ratings_count >= 100) %>% 
+  slice_max(average_rating, n = 5)
+```
+
+Harry Potter and Calvin and Hobbs are popular. Its a little annoying that box sets and not just individual books are being included but I can't think of a way around this at present. 
+
+```{r}
+books_subset %>% 
+  filter(ratings_count >= 100) %>% 
+  slice_min(average_rating, n = 5)
+```
+
+Some famous authors in the lowest rated list!
+
+__2. What books have the highest number of ratings?__
+
+```{r}
+books_subset %>% 
+  slice_max(ratings_count, n = 5)
+```
+
+No big surprises there, all very well known books. 
+
+__3. What length of book gets the highest average rating?__
+
+```{r}
+# the books were split into 4 groups based on number of pages. The number of pages were chosen based on the quartile information as <100, 100 to 300, 301 to 600 and >600. 
+
+books_subset %>% 
+  select(num_pages, average_rating) %>% 
+  mutate(page_num_range = case_when(
+    num_pages < 100 ~ "less than 100",
+    num_pages >= 100 & num_pages <= 300 ~ "100 to 300",
+    num_pages > 300 & num_pages <= 600 ~ "301 to 600",
+    num_pages > 600 ~ "greater than 600"
+    )) %>% 
+  group_by(page_num_range) %>% 
+  summarise(ave_rating = round(mean(average_rating), 2)) %>% 
+  arrange(ave_rating)
+
+```
+
+Not a very interesting analysis. No obvious trend between number of pages and average rating. I was expecting one of the middle categories to come out the highest but it is the longer books that generally have higher rating. Perhaps people only stick with books this length if they are good. 
+
+
+__4. Top book for each year?__
+
+```{r}
+# converting publication_date column to date format then extracting year. The results showed a book with wrong publication date at the top. This was corrected manually. 
+
+# fixing Consider the Lilies publication date. I think there must be a better way to do this.
+books_subset <- books_subset %>% 
+  mutate(publication_date = (recode(publication_date, "1/1/1900" = "1/1/1968"))) 
+
+books_subset %>% 
+  mutate(publication_date = as.Date(publication_date, tryFormats = c("%m/%d/%Y"))) %>% 
+  mutate(year = format(publication_date, "%Y")) %>% 
+  group_by(year) %>% 
+  filter(ratings_count > 100) %>% 
+  slice_max((average_rating), n = 1) %>% 
+  select(title, authors, average_rating, year)
+```
+A scan through the data by eye suggests a trend of increasing average rating, peaking in the 90s and 00s and then tailing off again. Would be lovely to see this in a graph, would need to compare to number of ratings as this could be having an influence. 
+
+
+
+
+```{r}
+#can't remember what this piece of code was for? Perhaps to check the above code was working as it should??
+
+#books_subset %>% 
+#  mutate(publication_date2 = as.Date(publication_date, tryFormats = #c("%m/%d/%Y"))) %>% 
+#  mutate(year = format(publication_date2, "%Y")) %>% 
+#  filter(year == 2002)
+```
+
+__5. Highest rated author / lowest rated author? __
+
+I considered separating out the author column for this but a lot of the entries which contain multiple authors are for translated books so I'm not sure thats fair. In the end I decided to do it both ways to compare but then didn't have time. 
+
+```{r}
+top_authors <- books_subset %>% 
+# found the ratings filter necessary again as it just gave 18 books with a 5.00 rating otherwise without the filter
+  filter(ratings_count >= 100) %>% 
+  group_by(authors) %>% 
+  summarise(author_mean = mean(average_rating)) %>% 
+  slice_max(author_mean, n = 5)
+
+top_authors
+```
+
+Would be interesting to see what books and how many books the above results are based on. 
+
+```{r}
+books_subset %>% 
+  filter(authors == "Saul Leiter/Martin Harrison" |
+        authors == "Murray Sayle/Charles Flowers/Elliott Erwitt" |
+          authors == "Bill Watterson" |
+          authors == "Anonymous" |
+          authors == "David Allen Sibley")
+```
+Lots of Calvin and Hobbs books and one book for each of the other authors. 
+
+What if we get the top rated author where the average rating comes from more than one book.
+
+```{r}
+top_authors_2plus_books <- books_subset %>% 
+  filter(ratings_count >= 100) %>% 
+  group_by(authors) %>% 
+  mutate(num_books_per_author = n()) %>% 
+  arrange(desc(num_books_per_author)) %>% 
+  filter(num_books_per_author > 1) %>% 
+  group_by(authors) %>% 
+  summarise(author_mean = mean(average_rating)) %>% 
+  slice_max(author_mean, n = 5)
+
+top_authors_2plus_books
+
+```
+
+Changing the number of books to 2, 3 or 4 sees JK Rowling appear. Bill Watterson and Hiromu Arakawa stay in the top 5 even as the number of books increase. 
+
+
+Changed above code slightly to get lowest rated authors, where average rating is calculated on more than one book.
+
+```{r}
+bottom_authors_2plus_books <- books_subset %>% 
+  filter(ratings_count >= 100) %>% 
+  group_by(authors) %>% 
+  mutate(num_books_per_author = n()) %>% 
+  arrange(desc(num_books_per_author)) %>% 
+  filter(num_books_per_author > 1) %>% 
+  group_by(authors) %>% 
+  summarise(author_mean = mean(average_rating)) %>% 
+  slice_min(author_mean, n = 5)
+
+bottom_authors_2plus_books
+```
+
+
+__6. Which author has the most books on the list?__
+
+```{r}
+books_subset %>% 
+  filter(ratings_count >= 100) %>% 
+  group_by(authors) %>% 
+  summarise(num_books_per_author = n()) %>% 
+  slice_max(num_books_per_author, n = 10)
+```
+
+__7. Which publisher has published the most books?__  
+
+As mentioned previously, the same publishers have their names written differently in the dataset and will therefore be identified as different publishers. This means the list of top publishers may not be accurate. 
+
+```{r}
+books_subset %>% 
+  group_by(publisher) %>% 
+  summarise(num_books_per_publisher = n()) %>% 
+  slice_max(num_books_per_publisher, n = 10)
+```
+
+__8.Which publisher has the best rating?__
+
+```{r}
+books_subset %>% 
+  filter(ratings_count >= 100) %>% 
+  group_by(publisher) %>% 
+  summarise(publisher_mean = mean(average_rating)) %>% 
+  slice_max(publisher_mean, n = 10)
+
+
+```
+
