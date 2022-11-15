@@ -9,13 +9,13 @@ output:
     df_print: paged
 ---
 # 1.1 Joins
-```{r include=FALSE}
+```{r results=FALSE}
 library(tidyverse)
 ```
 
 ## Question 1
-```{r include=FALSE}
-card <- read_csv("data/CardBase.csv")
+```{r results=FALSE}
+card <- read_csv("")
 customer <- read_csv("data/CustomerBase.csv")
 fraud <- read_csv("data/FraudBase.csv")
 transact <- read_csv("data/TransactionBase.csv")
