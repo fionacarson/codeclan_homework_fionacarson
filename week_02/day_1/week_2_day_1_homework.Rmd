@@ -1,0 +1,111 @@
+---
+title: "Week 2 Day 1 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '3'
+    highlight: tango
+    df_print: paged
+---
+# 1.1 Joins
+```{r include=FALSE}
+library(tidyverse)
+```
+
+## Question 1
+```{r include=FALSE}
+card <- read_csv("data/CardBase.csv")
+customer <- read_csv("data/CustomerBase.csv")
+fraud <- read_csv("data/FraudBase.csv")
+transact <- read_csv("data/TransactionBase.csv")
+```
+
+
+```{r}
+card <- janitor::clean_names(card)
+customer <- janitor::clean_names(customer)
+fraud <- janitor::clean_names(fraud)
+transact <- janitor::clean_names(transact)
+```
+
+
+## Question 2
+
+```{r}
+card %>% 
+  left_join(customer, by = "cust_id")
+```
+
+## Question 3
+```{r}
+transact %>% 
+  full_join(fraud, by = "transaction_id")
+```
+
+The results of the join give 10,000 rows which is the same as the transaction table, therefore all fraud transaction were listed in the transaction table already. 
+
+## Question 4
+
+```{r}
+
+transact %>% 
+  semi_join(card, by = c("credit_card_id" = "card_number"))
+
+```
+
+# 1.2 tidyr
+## Question 5
+
+```{r include = FALSE}
+hats <- read_csv("data/hat_observations.csv")
+```
+
+```{r}
+hats <- hats %>% 
+  separate(observation, into = c("hat_colour", "hat_type"), sep = ",")
+
+hats
+```
+
+## Question 6
+
+```{r}
+hats %>% 
+  unite(col = "date",  c("day", "month", "year"), sep = "/") %>% 
+  mutate(date = as.Date(date, tryFormats = c("%d/%m/%Y"))) %>% 
+  filter(hat_type == "beret") %>% 
+  slice_max(order_by = observation_count, n = 1)
+
+
+
+```
+
+# 2.1 Joins
+## Question 1
+
+```{r}
+fraud %>% 
+  left_join(transact) %>% 
+  left_join(card, by = c("credit_card_id" = "card_number")) %>% 
+  left_join(customer, by = "cust_id")
+```
+
+
+
+
+
+
+## Question 2
+
+```{r}
+exam <- read_csv("data/exam_scores.csv")
+```
+
+```{r}
+exam %>% 
+  pivot_longer(exam_Q1:exam_Q10, names_to = "exam_question", values_to = "score") %>% 
+  separate(col = exam_question, into = c("x", "exam_question"), sep = "Q") %>% 
+  select(-x)
+```
+
