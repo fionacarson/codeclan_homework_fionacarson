@@ -1,0 +1,135 @@
+---
+title: "Week 2 Day 2 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+# Question 1
+
+```{r}
+tweets <- read_csv("data/code_clan_tweets.csv")
+```
+```{r}
+nrow(tweets)
+ncol(tweets)
+names(tweets)
+```
+```{r}
+glimpse(tweets)
+```
+
+
+# Question 2
+
+```{r}
+tweets %>% 
+  filter(is_quote == FALSE) %>% 
+  summarise(total_fav_count = sum(favorite_count))
+  
+```
+# Question 3
+
+```{r}
+tweets %>% 
+  filter(is_quote == FALSE) %>% 
+  group_by(source) %>% 
+  summarise(ave_retweets = mean(retweet_count))
+```
+# Question 4
+
+```{r}
+distinct(tweets, media_type)
+```
+
+```{r}
+tweets %>% 
+  group_by(media_type) %>% 
+  summarise(total_fav_count = sum(favorite_count)) %>% 
+  arrange(desc(total_fav_count))
+```
+
+# Question 5
+
+```{r}
+tweets %>% 
+  summarise(mean(length(text)))
+```
+```{r}
+tweets %>% 
+  summarise(mean(display_text_width))
+```
+Using the length function gives a much higher mean than using the data in display_text_width. Perhaps the length counts all the spaces and punction too?
+
+```{r}
+char <- "(?i)[A-Z]+"
+
+all_text_char <- tweets %>% 
+  select(text) %>% 
+  str_extract_all(pattern = char) %>% 
+  flatten_chr() %>% 
+  str_c(collapse = "")
+
+ave_tweet_length <- nchar(all_text_char) / nrow(tweets)
+
+ave_tweet_length
+```
+
+# Question 6
+
+```{r}
+info <- read_csv("data/code_clan_info.csv")
+```
+
+```{r}
+full_dataset <- left_join(tweets, info, by = "tweet_id")
+
+full_dataset
+```
+
+# Question 7
+
+```{r}
+codeclan_hashtags <- full_dataset %>% 
+  select(tweet_id, hashtags) %>% 
+  drop_na()
+
+codeclan_hashtags
+```
+
+# Question 8
+
+```{r}
+combin <- "c\\("
+
+codeclan_hashtags %>% 
+  mutate(mult_hash = str_detect(hashtags, combin)) %>% 
+  summarise(total = sum(mult_hash == TRUE))
+
+```
+
+# Question 9
+
+```{r}
+edinb <- "Edinburgh" 
+
+tweets %>% 
+  mutate(newcol = str_detect(text, edinb)) %>% 
+  summarise(total = sum(newcol == TRUE))
+```
+
+# Question 10
+
+```{r}
+
+```
+
