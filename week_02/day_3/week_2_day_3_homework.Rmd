@@ -1,0 +1,125 @@
+---
+title: "Week 2 Day 3 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+```
+
+# Question 1
+Create a list of lists
+```{r}
+weather_3day <- list(thursday = list(temp = 9, chance_rain = 97, wind_speed = 22), friday = list(temp = 10, chance_rain = 78, wind_speed = 19), saturday = list(temp = 8, chance_rain = 28, wind_speed = 14))
+
+weather_3day
+```
+
+# Question 2
+## Part i
+The chance of rain tomorrow (Thurday)
+```{r}
+weather_3day$thursday$chance_rain
+```
+
+## Part ii
+The wind speed on the day after tomorrow
+```{r}
+weather_3day$friday$wind_speed
+```
+
+## Part iii
+The temperature tomorrow
+```{r}
+weather_3day$thursday$temp
+```
+
+# Question 3
+
+```{r}
+weather_14day <- matrix(c(9, 10, 10, 9, 8, 7, 7, 8, 8, 8, 7, 8, 9, 8), nrow = 2, ncol = 7, byrow = TRUE, dimnames = list(c("week_1", "week_2"), c("wed", "thurs", "fri", "sat", "sun", "mon", "tues")))
+
+weather_14day
+```
+
+# Question 4
+## Part i
+
+```{r}
+weather_14day[2,3]
+```
+
+```{r}
+weather_14day["week_2","fri"]
+```
+
+## Part ii
+
+```{r}
+weather_14day[2,]
+```
+
+```{r}
+weather_14day["week_2",]
+```
+
+## Part iii
+
+```{r}
+weather_14day[,c(1,3,5)]
+```
+
+# Question 5
+
+
+```{r}
+funky_func <- function(x){
+  if (is.character(x)) {
+    print(str_c("The answer is: ", x))
+  } 
+  if (is.numeric(x)) {
+      if (x < 10){
+        print(x)
+      } else {
+        x / 10
+      }
+  }
+    
+}
+
+funky_func(50)
+```
+
+# Question 6
+
+```{r}
+vec1 <- c(1, 2, 3)
+vec2 <- c(2, 3, 1)
+vec3 <- c(3, 2, 4)
+
+vec_check <- function(vec_a, vec_b) {
+  if (identical(vec_a, vec_b)) {
+    print("Exactly the same")
+  } else {
+    if (identical(sort(vec_a), sort(vec_b))) {
+      print("The same")
+    } else {
+      print("Different")
+    }
+}
+}
+
+vec_check(vec1, c(1,2,3))
+
+vec_check(vec1, vec2)
+
+vec_check(vec1, vec3)
+
+```
+
