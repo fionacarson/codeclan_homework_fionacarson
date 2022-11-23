@@ -141,8 +141,9 @@ FROM employees_committees AS ec
 
 
 --Q6 
-
-SELECT *
+EXPLAIN ANALYSE
+SELECT 
+count(e.id)
 FROM employees AS e
 LEFT JOIN employees_committees AS ec 
 ON e.id = ec.employee_id 
