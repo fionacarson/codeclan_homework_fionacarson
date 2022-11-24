@@ -169,7 +169,7 @@ SELECT
 	count(id),
 	grade
 FROM employees
-GROUP BY grade
+GROUP BY grade;
 
 
 
