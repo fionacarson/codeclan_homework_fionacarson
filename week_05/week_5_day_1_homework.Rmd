@@ -93,9 +93,14 @@ Show annual sales of personal fitness trackers over the last 5 years broken down
 ggplot(competitors) +
   aes(x = Year, y = Revenue, fill = Company) +
   geom_area() +
-  scale_y_continuous(labels = scales::comma)
-
-
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Annual Sales by Company", subtitle = "2015 to 2019") +
+  scale_fill_manual(values = col_scheme) +
+  theme_light() +
+  theme(legend.title = element_blank(),
+        text = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(size = 18, face = "bold"))
 ```
 
 ## Question 5
@@ -107,7 +112,15 @@ ggplot(competitors) +
   aes(Year, Revenue) +
   geom_line(aes(colour = Company)) +
   geom_point(aes(colour = Company)) +
-  scale_y_continuous(labels = scales::comma)
+  scale_y_continuous(labels = scales::comma) +
+  labs(title = "Annual Sales by Company", subtitle = "2015 to 2019") +
+  scale_colour_manual(values = col_scheme) +
+  theme_light() +
+  theme(legend.title = element_blank(),
+        text = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(size = 18, face = "bold"))
+
 ```
 
 ### Question 6
@@ -115,12 +128,19 @@ ggplot(competitors) +
 Now the company wants to compare the number of steps that their device counts vs. their competitors. Make a line graph of the number of steps throughout time, and use faceting to compare between companies and people. The data for this is in qb_device_data.
 
 ```{r}
-device_data <- device_data %>% 
-  mutate(time_mins = ((hours * 60) + mins))
-
-ggplot(device_data) + 
+device_data %>% 
+  mutate(time_mins = ((hours * 60) + mins)) %>% 
+ggplot() + 
   aes(x = time_mins, y = counts) +
   geom_line() +
-  facet_grid(id ~ device)
+  facet_grid(id ~ device) +
+  labs(x = "Time(min)", y = "Number of Steps") +
+  theme_light() +
+  theme(legend.title = element_blank(),
+        text = element_text(size = 12),
+        axis.text = element_text(size = 10),
+        plot.title = element_text(size = 18, face = "bold"))
+
+
 ```
 
