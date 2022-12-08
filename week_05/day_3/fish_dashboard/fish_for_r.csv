@@ -1,0 +1,649 @@
+river,test_site,year,measurement_type,result,river_and_test_site
+Forss,Cnoc-glas,2013,Numerical Density,0.56,FORSS Cnoc-glas
+Forss,Cnoc-glas,2013,Biomass Density,3.2,FORSS Cnoc-glas
+Forss,Cnoc-glas,2013,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2013,conductivity,146,FORSS Cnoc-glas
+Forss,Cnoc-glas,2014,Numerical Density,1.31,FORSS Cnoc-glas
+Forss,Cnoc-glas,2014,Biomass Density,3,FORSS Cnoc-glas
+Forss,Cnoc-glas,2014,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2014,conductivity,68,FORSS Cnoc-glas
+Forss,Cnoc-glas,2015,Numerical Density,1.17,FORSS Cnoc-glas
+Forss,Cnoc-glas,2015,Biomass Density,3.8,FORSS Cnoc-glas
+Forss,Cnoc-glas,2015,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2015,conductivity,95,FORSS Cnoc-glas
+Forss,Cnoc-glas,2016,Numerical Density,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2016,Biomass Density,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2016,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2016,conductivity,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2017,Numerical Density,1.23,FORSS Cnoc-glas
+Forss,Cnoc-glas,2017,Biomass Density,5,FORSS Cnoc-glas
+Forss,Cnoc-glas,2017,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2017,conductivity,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2018,Numerical Density,0.44,FORSS Cnoc-glas
+Forss,Cnoc-glas,2018,Biomass Density,2.69,FORSS Cnoc-glas
+Forss,Cnoc-glas,2018,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2018,conductivity,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2019,Numerical Density,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2019,Biomass Density,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2019,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2019,conductivity,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2020,Numerical Density,0.21,FORSS Cnoc-glas
+Forss,Cnoc-glas,2020,Biomass Density,2.33,FORSS Cnoc-glas
+Forss,Cnoc-glas,2020,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2020,conductivity,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2021,Numerical Density,0.33,FORSS Cnoc-glas
+Forss,Cnoc-glas,2021,Biomass Density,1.11,FORSS Cnoc-glas
+Forss,Cnoc-glas,2021,ph,NA,FORSS Cnoc-glas
+Forss,Cnoc-glas,2021,conductivity,NA,FORSS Cnoc-glas
+Forss,Shurrery,2013,Numerical Density,2.06,FORSS Shurrery
+Forss,Shurrery,2013,Biomass Density,10.9,FORSS Shurrery
+Forss,Shurrery,2013,ph,NA,FORSS Shurrery
+Forss,Shurrery,2013,conductivity,101,FORSS Shurrery
+Forss,Shurrery,2014,Numerical Density,2.2,FORSS Shurrery
+Forss,Shurrery,2014,Biomass Density,10.2,FORSS Shurrery
+Forss,Shurrery,2014,ph,NA,FORSS Shurrery
+Forss,Shurrery,2014,conductivity,71,FORSS Shurrery
+Forss,Shurrery,2015,Numerical Density,2.64,FORSS Shurrery
+Forss,Shurrery,2015,Biomass Density,10.3,FORSS Shurrery
+Forss,Shurrery,2015,ph,NA,FORSS Shurrery
+Forss,Shurrery,2015,conductivity,98,FORSS Shurrery
+Forss,Shurrery,2016,Numerical Density,1.29,FORSS Shurrery
+Forss,Shurrery,2016,Biomass Density,9,FORSS Shurrery
+Forss,Shurrery,2016,ph,NA,FORSS Shurrery
+Forss,Shurrery,2016,conductivity,NA,FORSS Shurrery
+Forss,Shurrery,2017,Numerical Density,3.51,FORSS Shurrery
+Forss,Shurrery,2017,Biomass Density,14,FORSS Shurrery
+Forss,Shurrery,2017,ph,NA,FORSS Shurrery
+Forss,Shurrery,2017,conductivity,NA,FORSS Shurrery
+Forss,Shurrery,2018,Numerical Density,1.59,FORSS Shurrery
+Forss,Shurrery,2018,Biomass Density,9.72,FORSS Shurrery
+Forss,Shurrery,2018,ph,NA,FORSS Shurrery
+Forss,Shurrery,2018,conductivity,NA,FORSS Shurrery
+Forss,Shurrery,2019,Numerical Density,0.42,FORSS Shurrery
+Forss,Shurrery,2019,Biomass Density,4.91,FORSS Shurrery
+Forss,Shurrery,2019,ph,NA,FORSS Shurrery
+Forss,Shurrery,2019,conductivity,NA,FORSS Shurrery
+Forss,Shurrery,2020,Numerical Density,0.27,FORSS Shurrery
+Forss,Shurrery,2020,Biomass Density,3.32,FORSS Shurrery
+Forss,Shurrery,2020,ph,NA,FORSS Shurrery
+Forss,Shurrery,2020,conductivity,NA,FORSS Shurrery
+Forss,Shurrery,2021,Numerical Density,0.32,FORSS Shurrery
+Forss,Shurrery,2021,Biomass Density,5.24,FORSS Shurrery
+Forss,Shurrery,2021,ph,NA,FORSS Shurrery
+Forss,Shurrery,2021,conductivity,NA,FORSS Shurrery
+Forss,Lythmore,2013,Numerical Density,2.24,FORSS Lythmore
+Forss,Lythmore,2013,Biomass Density,11,FORSS Lythmore
+Forss,Lythmore,2013,ph,NA,FORSS Lythmore
+Forss,Lythmore,2013,conductivity,181,FORSS Lythmore
+Forss,Lythmore,2014,Numerical Density,4.17,FORSS Lythmore
+Forss,Lythmore,2014,Biomass Density,11.4,FORSS Lythmore
+Forss,Lythmore,2014,ph,NA,FORSS Lythmore
+Forss,Lythmore,2014,conductivity,162,FORSS Lythmore
+Forss,Lythmore,2015,Numerical Density,1.53,FORSS Lythmore
+Forss,Lythmore,2015,Biomass Density,10,FORSS Lythmore
+Forss,Lythmore,2015,ph,NA,FORSS Lythmore
+Forss,Lythmore,2015,conductivity,184,FORSS Lythmore
+Forss,Lythmore,2016,Numerical Density,2.42,FORSS Lythmore
+Forss,Lythmore,2016,Biomass Density,11,FORSS Lythmore
+Forss,Lythmore,2016,ph,NA,FORSS Lythmore
+Forss,Lythmore,2016,conductivity,NA,FORSS Lythmore
+Forss,Lythmore,2017,Numerical Density,NA,FORSS Lythmore
+Forss,Lythmore,2017,Biomass Density,NA,FORSS Lythmore
+Forss,Lythmore,2017,ph,NA,FORSS Lythmore
+Forss,Lythmore,2017,conductivity,NA,FORSS Lythmore
+Forss,Lythmore,2018,Numerical Density,0.69,FORSS Lythmore
+Forss,Lythmore,2018,Biomass Density,2.98,FORSS Lythmore
+Forss,Lythmore,2018,ph,NA,FORSS Lythmore
+Forss,Lythmore,2018,conductivity,218,FORSS Lythmore
+Forss,Lythmore,2019,Numerical Density,NA,FORSS Lythmore
+Forss,Lythmore,2019,Biomass Density,NA,FORSS Lythmore
+Forss,Lythmore,2019,ph,NA,FORSS Lythmore
+Forss,Lythmore,2019,conductivity,NA,FORSS Lythmore
+Forss,Lythmore,2020,Numerical Density,0.43,FORSS Lythmore
+Forss,Lythmore,2020,Biomass Density,2.81,FORSS Lythmore
+Forss,Lythmore,2020,ph,NA,FORSS Lythmore
+Forss,Lythmore,2020,conductivity,NA,FORSS Lythmore
+Forss,Lythmore,2021,Numerical Density,0.1,FORSS Lythmore
+Forss,Lythmore,2021,Biomass Density,1.4,FORSS Lythmore
+Forss,Lythmore,2021,ph,NA,FORSS Lythmore
+Forss,Lythmore,2021,conductivity,NA,FORSS Lythmore
+Thurso,Rumsdale,2013,Numerical Density,1.33,THURSO Rumsdale
+Thurso,Rumsdale,2013,Biomass Density,4.3,THURSO Rumsdale
+Thurso,Rumsdale,2013,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2013,conductivity,114,THURSO Rumsdale
+Thurso,Rumsdale,2014,Numerical Density,1.63,THURSO Rumsdale
+Thurso,Rumsdale,2014,Biomass Density,4.7,THURSO Rumsdale
+Thurso,Rumsdale,2014,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2014,conductivity,56,THURSO Rumsdale
+Thurso,Rumsdale,2015,Numerical Density,1.22,THURSO Rumsdale
+Thurso,Rumsdale,2015,Biomass Density,4,THURSO Rumsdale
+Thurso,Rumsdale,2015,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2015,conductivity,77,THURSO Rumsdale
+Thurso,Rumsdale,2016,Numerical Density,1.17,THURSO Rumsdale
+Thurso,Rumsdale,2016,Biomass Density,4,THURSO Rumsdale
+Thurso,Rumsdale,2016,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2016,conductivity,NA,THURSO Rumsdale
+Thurso,Rumsdale,2017,Numerical Density,1.93,THURSO Rumsdale
+Thurso,Rumsdale,2017,Biomass Density,6,THURSO Rumsdale
+Thurso,Rumsdale,2017,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2017,conductivity,NA,THURSO Rumsdale
+Thurso,Rumsdale,2018,Numerical Density,2.05,THURSO Rumsdale
+Thurso,Rumsdale,2018,Biomass Density,8.03,THURSO Rumsdale
+Thurso,Rumsdale,2018,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2018,conductivity,NA,THURSO Rumsdale
+Thurso,Rumsdale,2019,Numerical Density,1.16,THURSO Rumsdale
+Thurso,Rumsdale,2019,Biomass Density,5.88,THURSO Rumsdale
+Thurso,Rumsdale,2019,ph,7.73,THURSO Rumsdale
+Thurso,Rumsdale,2019,conductivity,106,THURSO Rumsdale
+Thurso,Rumsdale,2020,Numerical Density,1.62,THURSO Rumsdale
+Thurso,Rumsdale,2020,Biomass Density,5.57,THURSO Rumsdale
+Thurso,Rumsdale,2020,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2020,conductivity,NA,THURSO Rumsdale
+Thurso,Rumsdale,2021,Numerical Density,0.99,THURSO Rumsdale
+Thurso,Rumsdale,2021,Biomass Density,4.76,THURSO Rumsdale
+Thurso,Rumsdale,2021,ph,NA,THURSO Rumsdale
+Thurso,Rumsdale,2021,conductivity,NA,THURSO Rumsdale
+Thurso,Rangag,2013,Numerical Density,NA,THURSO Rangag
+Thurso,Rangag,2013,Biomass Density,NA,THURSO Rangag
+Thurso,Rangag,2013,ph,NA,THURSO Rangag
+Thurso,Rangag,2013,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2014,Numerical Density,NA,THURSO Rangag
+Thurso,Rangag,2014,Biomass Density,NA,THURSO Rangag
+Thurso,Rangag,2014,ph,NA,THURSO Rangag
+Thurso,Rangag,2014,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2015,Numerical Density,NA,THURSO Rangag
+Thurso,Rangag,2015,Biomass Density,NA,THURSO Rangag
+Thurso,Rangag,2015,ph,NA,THURSO Rangag
+Thurso,Rangag,2015,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2016,Numerical Density,NA,THURSO Rangag
+Thurso,Rangag,2016,Biomass Density,NA,THURSO Rangag
+Thurso,Rangag,2016,ph,NA,THURSO Rangag
+Thurso,Rangag,2016,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2017,Numerical Density,NA,THURSO Rangag
+Thurso,Rangag,2017,Biomass Density,NA,THURSO Rangag
+Thurso,Rangag,2017,ph,NA,THURSO Rangag
+Thurso,Rangag,2017,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2018,Numerical Density,NA,THURSO Rangag
+Thurso,Rangag,2018,Biomass Density,NA,THURSO Rangag
+Thurso,Rangag,2018,ph,NA,THURSO Rangag
+Thurso,Rangag,2018,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2019,Numerical Density,NA,THURSO Rangag
+Thurso,Rangag,2019,Biomass Density,NA,THURSO Rangag
+Thurso,Rangag,2019,ph,7.78,THURSO Rangag
+Thurso,Rangag,2019,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2020,Numerical Density,3.36,THURSO Rangag
+Thurso,Rangag,2020,Biomass Density,5.54,THURSO Rangag
+Thurso,Rangag,2020,ph,NA,THURSO Rangag
+Thurso,Rangag,2020,conductivity,NA,THURSO Rangag
+Thurso,Rangag,2021,Numerical Density,3.2,THURSO Rangag
+Thurso,Rangag,2021,Biomass Density,3.03,THURSO Rangag
+Thurso,Rangag,2021,ph,NA,THURSO Rangag
+Thurso,Rangag,2021,conductivity,NA,THURSO Rangag
+Thurso,Tacher,2013,Numerical Density,NA,THURSO Tacher
+Thurso,Tacher,2013,Biomass Density,NA,THURSO Tacher
+Thurso,Tacher,2013,ph,NA,THURSO Tacher
+Thurso,Tacher,2013,conductivity,NA,THURSO Tacher
+Thurso,Tacher,2014,Numerical Density,NA,THURSO Tacher
+Thurso,Tacher,2014,Biomass Density,NA,THURSO Tacher
+Thurso,Tacher,2014,ph,NA,THURSO Tacher
+Thurso,Tacher,2014,conductivity,NA,THURSO Tacher
+Thurso,Tacher,2015,Numerical Density,2.27,THURSO Tacher
+Thurso,Tacher,2015,Biomass Density,4.5,THURSO Tacher
+Thurso,Tacher,2015,ph,NA,THURSO Tacher
+Thurso,Tacher,2015,conductivity,212,THURSO Tacher
+Thurso,Tacher,2016,Numerical Density,NA,THURSO Tacher
+Thurso,Tacher,2016,Biomass Density,NA,THURSO Tacher
+Thurso,Tacher,2016,ph,NA,THURSO Tacher
+Thurso,Tacher,2016,conductivity,NA,THURSO Tacher
+Thurso,Tacher,2017,Numerical Density,4.07,THURSO Tacher
+Thurso,Tacher,2017,Biomass Density,8,THURSO Tacher
+Thurso,Tacher,2017,ph,NA,THURSO Tacher
+Thurso,Tacher,2017,conductivity,NA,THURSO Tacher
+Thurso,Tacher,2018,Numerical Density,NA,THURSO Tacher
+Thurso,Tacher,2018,Biomass Density,NA,THURSO Tacher
+Thurso,Tacher,2018,ph,NA,THURSO Tacher
+Thurso,Tacher,2018,conductivity,NA,THURSO Tacher
+Thurso,Tacher,2019,Numerical Density,1.28,THURSO Tacher
+Thurso,Tacher,2019,Biomass Density,7.28,THURSO Tacher
+Thurso,Tacher,2019,ph,NA,THURSO Tacher
+Thurso,Tacher,2019,conductivity,NA,THURSO Tacher
+Thurso,Tacher,2020,Numerical Density,3.16,THURSO Tacher
+Thurso,Tacher,2020,Biomass Density,5.93,THURSO Tacher
+Thurso,Tacher,2020,ph,NA,THURSO Tacher
+Thurso,Tacher,2020,conductivity,NA,THURSO Tacher
+Thurso,Tacher,2021,Numerical Density,1.78,THURSO Tacher
+Thurso,Tacher,2021,Biomass Density,4.97,THURSO Tacher
+Thurso,Tacher,2021,ph,NA,THURSO Tacher
+Thurso,Tacher,2021,conductivity,NA,THURSO Tacher
+Thurso,Inshag,2013,Numerical Density,NA,THURSO Inshag
+Thurso,Inshag,2013,Biomass Density,NA,THURSO Inshag
+Thurso,Inshag,2013,ph,NA,THURSO Inshag
+Thurso,Inshag,2013,conductivity,NA,THURSO Inshag
+Thurso,Inshag,2014,Numerical Density,NA,THURSO Inshag
+Thurso,Inshag,2014,Biomass Density,NA,THURSO Inshag
+Thurso,Inshag,2014,ph,NA,THURSO Inshag
+Thurso,Inshag,2014,conductivity,NA,THURSO Inshag
+Thurso,Inshag,2015,Numerical Density,1.16,THURSO Inshag
+Thurso,Inshag,2015,Biomass Density,4.3,THURSO Inshag
+Thurso,Inshag,2015,ph,NA,THURSO Inshag
+Thurso,Inshag,2015,conductivity,210,THURSO Inshag
+Thurso,Inshag,2016,Numerical Density,NA,THURSO Inshag
+Thurso,Inshag,2016,Biomass Density,NA,THURSO Inshag
+Thurso,Inshag,2016,ph,NA,THURSO Inshag
+Thurso,Inshag,2016,conductivity,NA,THURSO Inshag
+Thurso,Inshag,2017,Numerical Density,1.24,THURSO Inshag
+Thurso,Inshag,2017,Biomass Density,4,THURSO Inshag
+Thurso,Inshag,2017,ph,NA,THURSO Inshag
+Thurso,Inshag,2017,conductivity,NA,THURSO Inshag
+Thurso,Inshag,2018,Numerical Density,NA,THURSO Inshag
+Thurso,Inshag,2018,Biomass Density,NA,THURSO Inshag
+Thurso,Inshag,2018,ph,NA,THURSO Inshag
+Thurso,Inshag,2018,conductivity,NA,THURSO Inshag
+Thurso,Inshag,2019,Numerical Density,0.72,THURSO Inshag
+Thurso,Inshag,2019,Biomass Density,4.27,THURSO Inshag
+Thurso,Inshag,2019,ph,NA,THURSO Inshag
+Thurso,Inshag,2019,conductivity,NA,THURSO Inshag
+Thurso,Inshag,2020,Numerical Density,3.19,THURSO Inshag
+Thurso,Inshag,2020,Biomass Density,4.82,THURSO Inshag
+Thurso,Inshag,2020,ph,NA,THURSO Inshag
+Thurso,Inshag,2020,conductivity,NA,THURSO Inshag
+Thurso,Inshag,2021,Numerical Density,1.5,THURSO Inshag
+Thurso,Inshag,2021,Biomass Density,5.99,THURSO Inshag
+Thurso,Inshag,2021,ph,NA,THURSO Inshag
+Thurso,Inshag,2021,conductivity,NA,THURSO Inshag
+Thurso,Pipe Bridge,2013,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2013,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2013,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2013,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2014,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2014,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2014,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2014,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2015,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2015,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2015,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2015,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2016,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2016,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2016,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2016,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2017,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2017,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2017,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2017,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2018,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2018,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2018,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2018,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2019,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2019,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2019,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2019,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2020,Numerical Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2020,Biomass Density,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2020,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2020,conductivity,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2021,Numerical Density,1.57,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2021,Biomass Density,4.74,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2021,ph,NA,THURSO Pipe Bridge
+Thurso,Pipe Bridge,2021,conductivity,NA,THURSO Pipe Bridge
+Thurso,Tulach More,2013,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2013,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2013,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2013,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2014,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2014,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2014,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2014,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2015,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2015,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2015,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2015,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2016,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2016,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2016,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2016,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2017,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2017,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2017,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2017,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2018,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2018,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2018,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2018,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2019,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2019,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2019,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2019,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2020,Numerical Density,NA,THURSO Tulach More
+Thurso,Tulach More,2020,Biomass Density,NA,THURSO Tulach More
+Thurso,Tulach More,2020,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2020,conductivity,NA,THURSO Tulach More
+Thurso,Tulach More,2021,Numerical Density,2.29,THURSO Tulach More
+Thurso,Tulach More,2021,Biomass Density,5.63,THURSO Tulach More
+Thurso,Tulach More,2021,ph,NA,THURSO Tulach More
+Thurso,Tulach More,2021,conductivity,NA,THURSO Tulach More
+Thurso,Poll Chreagain,2013,Numerical Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2013,Biomass Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2013,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2013,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2014,Numerical Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2014,Biomass Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2014,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2014,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2015,Numerical Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2015,Biomass Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2015,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2015,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2016,Numerical Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2016,Biomass Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2016,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2016,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2017,Numerical Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2017,Biomass Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2017,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2017,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2018,Numerical Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2018,Biomass Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2018,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2018,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2019,Numerical Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2019,Biomass Density,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2019,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2019,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2020,Numerical Density,2.5,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2020,Biomass Density,6.26,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2020,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2020,conductivity,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2021,Numerical Density,2.17,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2021,Biomass Density,6.15,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2021,ph,NA,THURSO Poll Chreagain
+Thurso,Poll Chreagain,2021,conductivity,NA,THURSO Poll Chreagain
+Wick,Acharole1,2013,Numerical Density,NA,WICK Acharole1
+Wick,Acharole1,2013,Biomass Density,NA,WICK Acharole1
+Wick,Acharole1,2013,ph,NA,WICK Acharole1
+Wick,Acharole1,2013,conductivity,NA,WICK Acharole1
+Wick,Acharole1,2014,Numerical Density,NA,WICK Acharole1
+Wick,Acharole1,2014,Biomass Density,NA,WICK Acharole1
+Wick,Acharole1,2014,ph,NA,WICK Acharole1
+Wick,Acharole1,2014,conductivity,NA,WICK Acharole1
+Wick,Acharole1,2015,Numerical Density,1.69,WICK Acharole1
+Wick,Acharole1,2015,Biomass Density,3.8,WICK Acharole1
+Wick,Acharole1,2015,ph,NA,WICK Acharole1
+Wick,Acharole1,2015,conductivity,244,WICK Acharole1
+Wick,Acharole1,2016,Numerical Density,NA,WICK Acharole1
+Wick,Acharole1,2016,Biomass Density,NA,WICK Acharole1
+Wick,Acharole1,2016,ph,NA,WICK Acharole1
+Wick,Acharole1,2016,conductivity,NA,WICK Acharole1
+Wick,Acharole1,2017,Numerical Density,NA,WICK Acharole1
+Wick,Acharole1,2017,Biomass Density,NA,WICK Acharole1
+Wick,Acharole1,2017,ph,NA,WICK Acharole1
+Wick,Acharole1,2017,conductivity,NA,WICK Acharole1
+Wick,Acharole1,2018,Numerical Density,3.87,WICK Acharole1
+Wick,Acharole1,2018,Biomass Density,6.04,WICK Acharole1
+Wick,Acharole1,2018,ph,NA,WICK Acharole1
+Wick,Acharole1,2018,conductivity,NA,WICK Acharole1
+Wick,Acharole1,2019,Numerical Density,NA,WICK Acharole1
+Wick,Acharole1,2019,Biomass Density,NA,WICK Acharole1
+Wick,Acharole1,2019,ph,NA,WICK Acharole1
+Wick,Acharole1,2019,conductivity,NA,WICK Acharole1
+Wick,Acharole1,2020,Numerical Density,1.31,WICK Acharole1
+Wick,Acharole1,2020,Biomass Density,4.78,WICK Acharole1
+Wick,Acharole1,2020,ph,NA,WICK Acharole1
+Wick,Acharole1,2020,conductivity,NA,WICK Acharole1
+Wick,Acharole1,2021,Numerical Density,0.62,WICK Acharole1
+Wick,Acharole1,2021,Biomass Density,2.54,WICK Acharole1
+Wick,Acharole1,2021,ph,NA,WICK Acharole1
+Wick,Acharole1,2021,conductivity,NA,WICK Acharole1
+Wick,Clow,2013,Numerical Density,0.61,WICK Clow
+Wick,Clow,2013,Biomass Density,3.7,WICK Clow
+Wick,Clow,2013,ph,NA,WICK Clow
+Wick,Clow,2013,conductivity,320,WICK Clow
+Wick,Clow,2014,Numerical Density,3.75,WICK Clow
+Wick,Clow,2014,Biomass Density,8.4,WICK Clow
+Wick,Clow,2014,ph,NA,WICK Clow
+Wick,Clow,2014,conductivity,231,WICK Clow
+Wick,Clow,2015,Numerical Density,2.26,WICK Clow
+Wick,Clow,2015,Biomass Density,8.6,WICK Clow
+Wick,Clow,2015,ph,NA,WICK Clow
+Wick,Clow,2015,conductivity,248,WICK Clow
+Wick,Clow,2016,Numerical Density,2.13,WICK Clow
+Wick,Clow,2016,Biomass Density,9.5,WICK Clow
+Wick,Clow,2016,ph,NA,WICK Clow
+Wick,Clow,2016,conductivity,NA,WICK Clow
+Wick,Clow,2017,Numerical Density,3.02,WICK Clow
+Wick,Clow,2017,Biomass Density,11,WICK Clow
+Wick,Clow,2017,ph,NA,WICK Clow
+Wick,Clow,2017,conductivity,NA,WICK Clow
+Wick,Clow,2018,Numerical Density,1.15,WICK Clow
+Wick,Clow,2018,Biomass Density,5.23,WICK Clow
+Wick,Clow,2018,ph,NA,WICK Clow
+Wick,Clow,2018,conductivity,NA,WICK Clow
+Wick,Clow,2019,Numerical Density,2.44,WICK Clow
+Wick,Clow,2019,Biomass Density,9.27,WICK Clow
+Wick,Clow,2019,ph,NA,WICK Clow
+Wick,Clow,2019,conductivity,NA,WICK Clow
+Wick,Clow,2020,Numerical Density,0.96,WICK Clow
+Wick,Clow,2020,Biomass Density,6.23,WICK Clow
+Wick,Clow,2020,ph,NA,WICK Clow
+Wick,Clow,2020,conductivity,NA,WICK Clow
+Wick,Clow,2021,Numerical Density,0.12,WICK Clow
+Wick,Clow,2021,Biomass Density,0.74,WICK Clow
+Wick,Clow,2021,ph,NA,WICK Clow
+Wick,Clow,2021,conductivity,NA,WICK Clow
+Wick,Sheriffs,2013,Numerical Density,2.18,WICK Sheriffs
+Wick,Sheriffs,2013,Biomass Density,5.7,WICK Sheriffs
+Wick,Sheriffs,2013,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2013,conductivity,312,WICK Sheriffs
+Wick,Sheriffs,2014,Numerical Density,1.89,WICK Sheriffs
+Wick,Sheriffs,2014,Biomass Density,4.1,WICK Sheriffs
+Wick,Sheriffs,2014,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2014,conductivity,166,WICK Sheriffs
+Wick,Sheriffs,2015,Numerical Density,3.17,WICK Sheriffs
+Wick,Sheriffs,2015,Biomass Density,10.1,WICK Sheriffs
+Wick,Sheriffs,2015,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2015,conductivity,203,WICK Sheriffs
+Wick,Sheriffs,2016,Numerical Density,3.02,WICK Sheriffs
+Wick,Sheriffs,2016,Biomass Density,11.5,WICK Sheriffs
+Wick,Sheriffs,2016,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2016,conductivity,NA,WICK Sheriffs
+Wick,Sheriffs,2017,Numerical Density,NA,WICK Sheriffs
+Wick,Sheriffs,2017,Biomass Density,NA,WICK Sheriffs
+Wick,Sheriffs,2017,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2017,conductivity,NA,WICK Sheriffs
+Wick,Sheriffs,2018,Numerical Density,NA,WICK Sheriffs
+Wick,Sheriffs,2018,Biomass Density,NA,WICK Sheriffs
+Wick,Sheriffs,2018,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2018,conductivity,NA,WICK Sheriffs
+Wick,Sheriffs,2019,Numerical Density,NA,WICK Sheriffs
+Wick,Sheriffs,2019,Biomass Density,NA,WICK Sheriffs
+Wick,Sheriffs,2019,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2019,conductivity,NA,WICK Sheriffs
+Wick,Sheriffs,2020,Numerical Density,NA,WICK Sheriffs
+Wick,Sheriffs,2020,Biomass Density,NA,WICK Sheriffs
+Wick,Sheriffs,2020,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2020,conductivity,NA,WICK Sheriffs
+Wick,Sheriffs,2021,Numerical Density,0.37,WICK Sheriffs
+Wick,Sheriffs,2021,Biomass Density,1.95,WICK Sheriffs
+Wick,Sheriffs,2021,ph,NA,WICK Sheriffs
+Wick,Sheriffs,2021,conductivity,NA,WICK Sheriffs
+Dunbeath,Culvid,2013,Numerical Density,1.7,DUNBEATH Culvid
+Dunbeath,Culvid,2013,Biomass Density,4.6,DUNBEATH Culvid
+Dunbeath,Culvid,2013,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2013,conductivity,165,DUNBEATH Culvid
+Dunbeath,Culvid,2014,Numerical Density,1.51,DUNBEATH Culvid
+Dunbeath,Culvid,2014,Biomass Density,4.6,DUNBEATH Culvid
+Dunbeath,Culvid,2014,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2014,conductivity,96,DUNBEATH Culvid
+Dunbeath,Culvid,2015,Numerical Density,1.21,DUNBEATH Culvid
+Dunbeath,Culvid,2015,Biomass Density,4.2,DUNBEATH Culvid
+Dunbeath,Culvid,2015,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2015,conductivity,84,DUNBEATH Culvid
+Dunbeath,Culvid,2016,Numerical Density,0.72,DUNBEATH Culvid
+Dunbeath,Culvid,2016,Biomass Density,4,DUNBEATH Culvid
+Dunbeath,Culvid,2016,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2016,conductivity,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2017,Numerical Density,1.61,DUNBEATH Culvid
+Dunbeath,Culvid,2017,Biomass Density,5,DUNBEATH Culvid
+Dunbeath,Culvid,2017,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2017,conductivity,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2018,Numerical Density,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2018,Biomass Density,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2018,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2018,conductivity,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2019,Numerical Density,0.49,DUNBEATH Culvid
+Dunbeath,Culvid,2019,Biomass Density,3.23,DUNBEATH Culvid
+Dunbeath,Culvid,2019,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2019,conductivity,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2020,Numerical Density,0.89,DUNBEATH Culvid
+Dunbeath,Culvid,2020,Biomass Density,3.25,DUNBEATH Culvid
+Dunbeath,Culvid,2020,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2020,conductivity,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2021,Numerical Density,0.68,DUNBEATH Culvid
+Dunbeath,Culvid,2021,Biomass Density,3.78,DUNBEATH Culvid
+Dunbeath,Culvid,2021,ph,NA,DUNBEATH Culvid
+Dunbeath,Culvid,2021,conductivity,NA,DUNBEATH Culvid
+Berriedale,Gobernuisgach,2013,Numerical Density,0.41,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2013,Biomass Density,2.7,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2013,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2013,conductivity,83,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2014,Numerical Density,0.41,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2014,Biomass Density,1.9,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2014,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2014,conductivity,78,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2015,Numerical Density,0.26,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2015,Biomass Density,2,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2015,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2015,conductivity,81,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2016,Numerical Density,1.81,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2016,Biomass Density,3.5,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2016,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2016,conductivity,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2017,Numerical Density,0.75,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2017,Biomass Density,3.5,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2017,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2017,conductivity,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2018,Numerical Density,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2018,Biomass Density,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2018,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2018,conductivity,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2019,Numerical Density,0.65,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2019,Biomass Density,3.15,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2019,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2019,conductivity,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2020,Numerical Density,0.37,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2020,Biomass Density,2.82,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2020,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2020,conductivity,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2021,Numerical Density,0.3,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2021,Biomass Density,1.34,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2021,ph,NA,BERRIEDALE Gobernuisgach
+Berriedale,Gobernuisgach,2021,conductivity,NA,BERRIEDALE Gobernuisgach
+Berriedale,Braemore,2013,Numerical Density,1.65,BERRIEDALE Braemore
+Berriedale,Braemore,2013,Biomass Density,4,BERRIEDALE Braemore
+Berriedale,Braemore,2013,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2013,conductivity,111,BERRIEDALE Braemore
+Berriedale,Braemore,2014,Numerical Density,1.55,BERRIEDALE Braemore
+Berriedale,Braemore,2014,Biomass Density,5,BERRIEDALE Braemore
+Berriedale,Braemore,2014,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2014,conductivity,84,BERRIEDALE Braemore
+Berriedale,Braemore,2015,Numerical Density,0.89,BERRIEDALE Braemore
+Berriedale,Braemore,2015,Biomass Density,4.4,BERRIEDALE Braemore
+Berriedale,Braemore,2015,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2015,conductivity,91,BERRIEDALE Braemore
+Berriedale,Braemore,2016,Numerical Density,1.97,BERRIEDALE Braemore
+Berriedale,Braemore,2016,Biomass Density,6.7,BERRIEDALE Braemore
+Berriedale,Braemore,2016,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2016,conductivity,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2017,Numerical Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2017,Biomass Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2017,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2017,conductivity,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2018,Numerical Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2018,Biomass Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2018,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2018,conductivity,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2019,Numerical Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2019,Biomass Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2019,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2019,conductivity,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2020,Numerical Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2020,Biomass Density,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2020,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2020,conductivity,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2021,Numerical Density,1.99,BERRIEDALE Braemore
+Berriedale,Braemore,2021,Biomass Density,7.42,BERRIEDALE Braemore
+Berriedale,Braemore,2021,ph,NA,BERRIEDALE Braemore
+Berriedale,Braemore,2021,conductivity,NA,BERRIEDALE Braemore
+Langwell,Wag,2013,Numerical Density,0.92,LANGWELL Wag
+Langwell,Wag,2013,Biomass Density,3.1,LANGWELL Wag
+Langwell,Wag,2013,ph,NA,LANGWELL Wag
+Langwell,Wag,2013,conductivity,156,LANGWELL Wag
+Langwell,Wag,2014,Numerical Density,0.69,LANGWELL Wag
+Langwell,Wag,2014,Biomass Density,4.5,LANGWELL Wag
+Langwell,Wag,2014,ph,NA,LANGWELL Wag
+Langwell,Wag,2014,conductivity,93,LANGWELL Wag
+Langwell,Wag,2015,Numerical Density,0.17,LANGWELL Wag
+Langwell,Wag,2015,Biomass Density,2.2,LANGWELL Wag
+Langwell,Wag,2015,ph,NA,LANGWELL Wag
+Langwell,Wag,2015,conductivity,122,LANGWELL Wag
+Langwell,Wag,2016,Numerical Density,1.1,LANGWELL Wag
+Langwell,Wag,2016,Biomass Density,3.5,LANGWELL Wag
+Langwell,Wag,2016,ph,NA,LANGWELL Wag
+Langwell,Wag,2016,conductivity,NA,LANGWELL Wag
+Langwell,Wag,2017,Numerical Density,1.22,LANGWELL Wag
+Langwell,Wag,2017,Biomass Density,7,LANGWELL Wag
+Langwell,Wag,2017,ph,NA,LANGWELL Wag
+Langwell,Wag,2017,conductivity,NA,LANGWELL Wag
+Langwell,Wag,2018,Numerical Density,NA,LANGWELL Wag
+Langwell,Wag,2018,Biomass Density,NA,LANGWELL Wag
+Langwell,Wag,2018,ph,NA,LANGWELL Wag
+Langwell,Wag,2018,conductivity,NA,LANGWELL Wag
+Langwell,Wag,2019,Numerical Density,0.57,LANGWELL Wag
+Langwell,Wag,2019,Biomass Density,6.04,LANGWELL Wag
+Langwell,Wag,2019,ph,NA,LANGWELL Wag
+Langwell,Wag,2019,conductivity,NA,LANGWELL Wag
+Langwell,Wag,2020,Numerical Density,0.13,LANGWELL Wag
+Langwell,Wag,2020,Biomass Density,1.99,LANGWELL Wag
+Langwell,Wag,2020,ph,NA,LANGWELL Wag
+Langwell,Wag,2020,conductivity,NA,LANGWELL Wag
+Langwell,Wag,2021,Numerical Density,0.8,LANGWELL Wag
+Langwell,Wag,2021,Biomass Density,3.08,LANGWELL Wag
+Langwell,Wag,2021,ph,NA,LANGWELL Wag
+Langwell,Wag,2021,conductivity,NA,LANGWELL Wag
+Langwell,Aultibea,2013,Numerical Density,1.24,LANGWELL Aultibea
+Langwell,Aultibea,2013,Biomass Density,3.6,LANGWELL Aultibea
+Langwell,Aultibea,2013,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2013,conductivity,158,LANGWELL Aultibea
+Langwell,Aultibea,2014,Numerical Density,1.71,LANGWELL Aultibea
+Langwell,Aultibea,2014,Biomass Density,4.4,LANGWELL Aultibea
+Langwell,Aultibea,2014,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2014,conductivity,NA,LANGWELL Aultibea
+Langwell,Aultibea,2015,Numerical Density,0.38,LANGWELL Aultibea
+Langwell,Aultibea,2015,Biomass Density,2.3,LANGWELL Aultibea
+Langwell,Aultibea,2015,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2015,conductivity,122,LANGWELL Aultibea
+Langwell,Aultibea,2016,Numerical Density,0.91,LANGWELL Aultibea
+Langwell,Aultibea,2016,Biomass Density,3.3,LANGWELL Aultibea
+Langwell,Aultibea,2016,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2016,conductivity,NA,LANGWELL Aultibea
+Langwell,Aultibea,2017,Numerical Density,NA,LANGWELL Aultibea
+Langwell,Aultibea,2017,Biomass Density,NA,LANGWELL Aultibea
+Langwell,Aultibea,2017,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2017,conductivity,NA,LANGWELL Aultibea
+Langwell,Aultibea,2018,Numerical Density,NA,LANGWELL Aultibea
+Langwell,Aultibea,2018,Biomass Density,NA,LANGWELL Aultibea
+Langwell,Aultibea,2018,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2018,conductivity,NA,LANGWELL Aultibea
+Langwell,Aultibea,2019,Numerical Density,NA,LANGWELL Aultibea
+Langwell,Aultibea,2019,Biomass Density,NA,LANGWELL Aultibea
+Langwell,Aultibea,2019,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2019,conductivity,NA,LANGWELL Aultibea
+Langwell,Aultibea,2020,Numerical Density,0.47,LANGWELL Aultibea
+Langwell,Aultibea,2020,Biomass Density,3.88,LANGWELL Aultibea
+Langwell,Aultibea,2020,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2020,conductivity,NA,LANGWELL Aultibea
+Langwell,Aultibea,2021,Numerical Density,1.06,LANGWELL Aultibea
+Langwell,Aultibea,2021,Biomass Density,3.04,LANGWELL Aultibea
+Langwell,Aultibea,2021,ph,NA,LANGWELL Aultibea
+Langwell,Aultibea,2021,conductivity,NA,LANGWELL Aultibea
