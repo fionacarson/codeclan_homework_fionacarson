@@ -90,6 +90,7 @@ ui <- fluidPage(
 
 
 server <- function(input, output) {
+  
   output$fish_plot <- renderPlotly({
     
     plotly_fish <- fish %>% 
@@ -118,9 +119,21 @@ server <- function(input, output) {
                        label = ~location,
 #                       labelOptions = labelOptions(noHide = TRUE),
                        radius = 7, color = "#ffffff", fill = TRUE, 
-                       fillColor = "#446e9b", fillOpacity = 0.3, weight = 0.4)
+                       fillColor = "#446e9b", fillOpacity = 0.3, weight = 0.4,
+                        group = "mygroup")
     
   })
+  
+fish_filtered <- reactive(
+  fish[fish$location %in% input$location_input,])
+
+  observeEvent(input$location_input, {
+    leafletProxy("map", data = fish_filtered()) %>%
+#      clearGroup("mygroup") %>%
+      addMarkers(lat = ~latitude, lng = ~longitude, group = "mygroup")
+  })
+
+  
 }
 
 shinyApp(ui, server)
