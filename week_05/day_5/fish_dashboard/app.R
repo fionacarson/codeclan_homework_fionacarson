@@ -1,15 +1,15 @@
 # Using my own data rather than the games_sales data was approved by instructors. 
 
-
+# Task still to complete
 # 1) y axis label superscripts
-# 3) Highlight points on graph as they are selected
-# 5) convert to publish on web
+# 2) convert to publish on web
 
-
-
-library(shiny)
+#library(shiny)
 library(leaflet)
 library(tidyverse)
+library(readxl)
+library(bslib)
+library(plotly)
 
 fish <- read_xlsx("fish_master.xlsx", sheet = "densities")
 
@@ -20,7 +20,7 @@ fish <- fish %>%
   janitor::clean_names() %>% 
   rename(river = catchment,
          test_site = location,
-        numerical_density = numerical_density_n_m2_total, 
+         numerical_density = numerical_density_n_m2_total, 
          biomass_density = biomass_density_g_m2_total,
          ph = p_h) %>% 
   pivot_longer(numerical_density:conductivity, 
@@ -44,13 +44,11 @@ plot_colours <- c("#446e9b", "#999999", "#3cb521", "#d47500", "#cd0200", "#3399f
                   "#333333", "#6610f2", "yellow", "brown", "peachpuff", "#6f42c1",
                   "#e83e8c", "#fd7e14", "#20c997", "#000000", "grey50", "#eeeeee")
 
-# Code to help add units to y-axis
-
+# Code to help add units to y-axis - still a work in progress
 # xl <- expression(Speed ~ ms^-1 ~ by ~ impeller)
-
 #y_axis_labels <-  c(expression(Numerical Density (n/m^2~)), "Biomass Density (g/m^2~)")
 
-y_axis_labels <-  c("Numerical Density (g/m2)", "Biomass Density (g/m^2~)")
+y_axis_labels <-  c("Numerical Density (g/m2)", "Biomass Density (g/m2)")
 
 density_list <- c("numerical_density", "biomass_density")
 
@@ -68,17 +66,17 @@ ui <- fluidPage(
       
       checkboxGroupInput(inputId = 'location_input',
                          label = (tags$strong("Select RIVER and Test Site")),
-                         choices = unique(fish$location)),
+                         choices = unique(fish$location))
     ),
     
     mainPanel(
-
-# A bar graph was chosen to allow comparison of the salmon densities across time (years in this case). This gives information on current and future salmon stocks as well as the health of the river.
-# A widget was added to allow the user to compare the salmon densities of different locations. This is important and allows the user to identify which locations are doing well and which are having trouble with their salmon stocks. 
-
+      
+      # A bar graph was chosen to allow comparison of the salmon densities across time (years in this case). This gives information on current and future salmon stocks as well as the health of the river.
+      # A widget was added to allow the user to compare the salmon densities of different locations. This is important and allows the user to identify which locations are doing well and which are having trouble with their salmon stocks. 
+      
       plotlyOutput('fish_plot'),
-
-# A map was added to help visualise where the locations are in relation to each other. This could, for example, show if an issue is with a river system or a geographical area.       
+      
+      # A map was added to help visualise where the locations are in relation to each other. This could, for example, show if an issue is with a river system or a geographical area.       
       leafletOutput("map")
     )
   ),
@@ -94,7 +92,9 @@ server <- function(input, output) {
   output$fish_plot <- renderPlotly({
     
     plotly_fish <- fish %>% 
+      # filtering location by check box input
       filter(location %in% input$location_input) %>% 
+      # filtering density data (numerical or biomass) by radio button input
       filter(measurement_type == input$density_input) %>% 
       ggplot() +
       aes(x = year, y = result) +
@@ -110,30 +110,33 @@ server <- function(input, output) {
   })
   
   output$map <- renderLeaflet({
-    
+
+# Create map with small black circles at all locations    
     fish %>% 
-#      filter(location %in% input$location_input) %>%
       leaflet() %>% 
       addTiles() %>%
-      addCircleMarkers(lat = ~latitude, lng = ~longitude, 
+      addCircleMarkers(lat = ~latitude, 
+                       lng = ~longitude, 
                        label = ~location,
-#                       labelOptions = labelOptions(noHide = TRUE),
-                       radius = 7, color = "#ffffff", fill = TRUE, 
-                       fillColor = "#446e9b", fillOpacity = 0.3, weight = 0.4,
-                        group = "mygroup")
+                       #labelOptions = labelOptions(noHide = TRUE),
+                       radius = 3, 
+                       color = "black"
+      )
     
   })
-  
-fish_filtered <- reactive(
-  fish[fish$location %in% input$location_input,])
 
+# Create variable which contains locations selected by check box   
+  fish_filtered <- reactive(
+    fish[fish$location %in% input$location_input,])
+
+# Use fish_filtered variable above to update map and add markers at the locations selected by check box, while also keeping original black dots placed using code above.    
   observeEvent(input$location_input, {
     leafletProxy("map", data = fish_filtered()) %>%
-#      clearGroup("mygroup") %>%
-      addMarkers(lat = ~latitude, lng = ~longitude, group = "mygroup")
+      clearGroup("mygroup") %>%
+      addMarkers(lat = ~latitude, 
+                 lng = ~longitude, 
+                 group = "mygroup")
   })
-
-  
 }
 
 shinyApp(ui, server)
