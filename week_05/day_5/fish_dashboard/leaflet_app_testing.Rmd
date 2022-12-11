@@ -14,7 +14,13 @@ library(readxl)
 fish <- read_xlsx("fish_master.xlsx", sheet = "densities")
 
 fish %>% 
-  select(-"OS Coordinates", -(7:9), -(11:13))
+  select(-(7:9), -(11:13)) %>% 
+  janitor::clean_names() %>% 
+  rename(numerical_density = numerical_density_n_m2_total, 
+         biomass_density = biomass_density_g_m2_total,
+         ph = p_h)
+
+fish <- pivot_longer(fish, numerical_density:conductivity, names_to = "measurement_type", values_to = "result")
 
 
 
