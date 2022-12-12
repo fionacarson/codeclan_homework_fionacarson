@@ -44,14 +44,10 @@ plot_colours <- c("#446e9b", "#999999", "#3cb521", "#d47500", "#cd0200", "#3399f
                   "#333333", "#6610f2", "yellow", "brown", "peachpuff", "#6f42c1",
                   "#e83e8c", "#fd7e14", "#20c997", "#000000", "grey50", "#eeeeee")
 
-# Code to help add units to y-axis - still a work in progress
-# xl <- expression(Speed ~ ms^-1 ~ by ~ impeller)
-#y_axis_labels <-  c(expression(Numerical Density (n/m^2~)), "Biomass Density (g/m^2~)")
-#expression(paste("Numerical Density ", m^2)
 
-#bquote('x axis'~(Å^2))
+y_axis_labels <- c("Numerical Density (n/m<sup>2</sup>)",
+                   "Biomass Density (g/m<sup>2</sup>)")
 
-y_axis_labels <-  c("Numerical Density (number/m2)", "Biomass Density (g/m2)")
 
 density_list <- c("numerical_density", "biomass_density")
 
@@ -113,8 +109,8 @@ server <- function(input, output) {
   })
   
   output$map <- renderLeaflet({
-
-# Create map with small black circles at all locations    
+    
+    # Create map with small black circles at all locations    
     fish %>% 
       leaflet() %>% 
       addTiles() %>%
@@ -127,12 +123,12 @@ server <- function(input, output) {
       )
     
   })
-
-# Create variable which contains locations selected by check box   
+  
+  # Create variable which contains locations selected by check box   
   fish_filtered <- reactive(
     fish[fish$location %in% input$location_input,])
-
-# Use fish_filtered variable above to update map and add markers at the locations selected by check box, while also keeping original black dots placed using code above.    
+  
+  # Use fish_filtered variable above to update map and add markers at the locations selected by check box, while also keeping original black dots placed using code above.    
   observeEvent(input$location_input, {
     leafletProxy("map", data = fish_filtered()) %>%
       clearGroup("mygroup") %>%
