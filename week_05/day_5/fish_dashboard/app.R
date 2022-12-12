@@ -2,7 +2,7 @@
 
 # Task still to complete
 # 1) y axis label superscripts
-# 2) convert to publish on web
+
 
 #library(shiny)
 library(leaflet)
@@ -47,8 +47,11 @@ plot_colours <- c("#446e9b", "#999999", "#3cb521", "#d47500", "#cd0200", "#3399f
 # Code to help add units to y-axis - still a work in progress
 # xl <- expression(Speed ~ ms^-1 ~ by ~ impeller)
 #y_axis_labels <-  c(expression(Numerical Density (n/m^2~)), "Biomass Density (g/m^2~)")
+#expression(paste("Numerical Density ", m^2)
 
-y_axis_labels <-  c("Numerical Density (g/m2)", "Biomass Density (g/m2)")
+#bquote('x axis'~(Å^2))
+
+y_axis_labels <-  c("Numerical Density (number/m2)", "Biomass Density (g/m2)")
 
 density_list <- c("numerical_density", "biomass_density")
 

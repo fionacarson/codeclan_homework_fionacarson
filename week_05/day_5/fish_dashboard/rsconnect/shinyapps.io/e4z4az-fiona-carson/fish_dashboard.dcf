@@ -5,10 +5,9 @@ account: e4z4az-fiona-carson
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7869366
-bundleId: 6624168
+bundleId: 6625945
 url: https://e4z4az-fiona-carson.shinyapps.io/fish_dashboard/
-when: 1670793702.33217
-lastSyncTime: 1670793702.33218
+when: 1670828119.58447
+lastSyncTime: 1670828119.58449
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: fish_master.xlsx
