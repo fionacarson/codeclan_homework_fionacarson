@@ -1,0 +1,176 @@
+---
+title: "Week 6 Day 2 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+# MVP
+
+## Question 1
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(skimr)
+
+phones <- read_csv("data/20190928-items.csv")
+
+phones <- clean_names(phones)
+
+skim(phones)
+```
+
+The ratings appear to be on a 1-5 scale, the mean and median are similar.
+
+The total reviews have very different mean and medians, I believe this means the data is skewed. It appears to be right skewed as mean > median and by comparing the values of p75 and p100 it looks like there are outliers  towards the high numbers. 
+
+
+
+
+## Question 2
+
+```{r}
+phones %>% 
+  group_by(brand) %>% 
+  summarise(num_phones = n()) %>% 
+  slice_max(num_phones)
+```
+Samsung has the highest number of phones at 397. 
+
+
+## Question 3
+
+```{r}
+phones_stats <- phones %>% 
+  filter(brand == "Samsung") %>% 
+  summarise(
+    num = n(),
+    mean = mean(rating), 
+    sd = sd(rating)
+  )
+
+
+phones %>% 
+  filter(brand == "Samsung") %>% 
+  ggplot(aes(x = rating)) + 
+  geom_histogram(aes(y = after_stat(density)),
+                 col = "white", 
+                 binwidth = 0.1) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = phones_stats$mean, 
+      sd = phones_stats$sd
+    ),
+    col = "red"
+  )
+```
+
+The normal distribution appears to fit the data quite well, although there are some clear outliers at the high and low ends of the x scale. 
+
+## Question 4
+
+sd = 0.6847859
+
+```{r}
+# ok to use nrow(phones) here as there are no missing ratings in the dataset
+
+within_1_sd <- phones %>% 
+  filter(between(rating, 
+                 phones_stats$mean - phones_stats$sd, 
+                 phones_stats$mean + phones_stats$sd)) %>% 
+  summarise(n() / nrow(phones)) %>% 
+  pull()
+
+within_2_sd <- phones %>% 
+  filter(between(rating, 
+                 phones_stats$mean - (2*phones_stats$sd), 
+                 phones_stats$mean + (2*phones_stats$sd))
+         ) %>% 
+  summarise(n() / nrow(phones)) %>% 
+  pull()
+
+
+within_3_sd <- phones %>% 
+  filter(between(rating, 
+                 phones_stats$mean - (3*phones_stats$sd), 
+                 phones_stats$mean + (3*phones_stats$sd))
+         ) %>% 
+  summarise(n() / nrow(phones)) %>% 
+  pull()
+
+normal_distr <- c(0.68, 0.95, 0.997)
+Q4_distr <- c(within_1_sd, within_2_sd, within_3_sd)
+how_many_sd <- c("within_1_sd", "within_2_sd", "within_3_sd")
+
+comparison <-  tibble(how_many_sd,
+                      "normal_distrbution" = normal_distr, 
+                      "Q4_distribution" = Q4_distr)
+
+comparison
+```
+
+
+```{r}
+comparison %>% 
+  pivot_longer(cols = 2:3, names_to = "distribution", values_to = "proportion_of_ratings") %>% 
+  ggplot(aes(x = how_many_sd, y = proportion_of_ratings)) +
+  geom_col(aes(fill = distribution), position = "dodge")
+```
+
+The proportion of ratings found within 1 SD of the mean is 78%. This is higher than for a normal distribution where this figure is 68%. This suggests the distribution is narrower in shape and has a smaller standard deviation. 
+A normal distribution has SD of 1 and our data has SD of 0.68 so this makes sense.
+The proportion of ratings found within 2 and 3 SDs of the mean are quite similar to a normal distribution. 
+
+```{r}
+phones %>% 
+  filter(brand == "Samsung") %>% 
+  ggplot(aes(x = rating)) + 
+  geom_histogram(aes(y = after_stat(density)),
+                 col = "white", 
+                 binwidth = 0.1) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = phones_stats$mean, 
+      sd = phones_stats$sd
+    ),
+    col = "red"
+  ) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = phones_stats$mean, 
+      sd = 1
+    ),
+    col = "blue"
+  ) 
+```
+
+# 2 Extension
+
+```{r}
+library(ggpubr)
+```
+
+```{r}
+ggdensity(phones$rating)
+```
+
+```{r}
+ggqqplot(phones$rating)
+```
+
+```{r}
+shapiro.test(phones$rating)
+```
+
+Hmmm the website says p-value > 0.05 means distribution of data is not signficantly different from normal distribution. 
+Our data gives a tiny p-value which suggests the data is very different from a normal distribution. This is in contrary to what we found above. 
+
+

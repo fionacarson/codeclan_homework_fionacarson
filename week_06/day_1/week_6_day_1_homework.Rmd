@@ -9,12 +9,75 @@ output:
     df_print: paged
 ---
 
-#1.1 The Titanic
+# 1.1 The Titanic
 
 ```{r}
 library(tidyverse)
 library(gtools)
+library(janitor)
 ```
+
+```{r}
+titanic <- read_csv("titanic.csv")
+```
+
+```{r}
+titanic %>% 
+  group_by(class) %>% 
+  summarise(n())
+
+titanic <- titanic %>% 
+  mutate(status = case_when(
+    class == "1st" ~ "passenger",
+    class == "2nd" ~ "passenger",
+    class == "3rd" ~ "passenger",
+    class == "deck crew" ~ "crew",
+    class == "enginnering crew" ~ "crew",
+    class == "restaurant staff" ~ "crew",
+    TRUE ~ "crew"
+  ))
+
+table <- titanic %>%
+  tabyl(status, survived) %>% 
+  adorn_totals(where = c("row", "col"))
+table
+```
+
+From the table:
+the crew had a 0.24 (211 / 890) survival rate
+passengers had a 0.38 (500 / 1317) survival rate
+
+```{r}
+crew_survived <- titanic %>% 
+  filter(status == "crew", survived == "yes") %>% 
+  summarise(n() / nrow(titanic))
+crew_died <- titanic %>% 
+  filter(status == "crew", survived == "no") %>% 
+  summarise(n() / nrow(titanic))
+passenger_survived <- titanic %>% 
+  filter(status == "passenger", survived == "yes") %>% 
+  summarise(n() / nrow(titanic))
+passenger_died <- titanic %>% 
+  filter(status == "passenger", survived == "no") %>% 
+  summarise(n() / nrow(titanic))
+prob_crew <- titanic %>% 
+  filter(status == "crew") %>% 
+  summarise(n() / nrow(titanic))
+
+prob_passenger <- 1 - prob_crew
+
+
+crew <- crew_survived / prob_crew
+crew
+
+passengers <- passenger_survived / prob_passenger
+passengers
+
+```
+0.237 for crew
+0.380 for passengers
+
+
 
 
 # 1.2 Probability Consolidation Questions
@@ -63,7 +126,7 @@ There are 34 outcomes where the total of the 4 dice equals 5, 6 or 7.
 
 The probability of getting a total of 5, 6 or 7 is 0.02623
 
-The die rolls are independent.
+All outcomes are equally likely.
 
 ## Question 4
 
