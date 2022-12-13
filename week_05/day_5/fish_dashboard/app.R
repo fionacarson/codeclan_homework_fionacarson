@@ -1,8 +1,5 @@
 # Using my own data rather than the games_sales data was approved by instructors. 
 
-# Task still to complete
-# 1) y axis label superscripts
-
 
 #library(shiny)
 library(leaflet)
@@ -44,11 +41,9 @@ plot_colours <- c("#446e9b", "#999999", "#3cb521", "#d47500", "#cd0200", "#3399f
                   "#333333", "#6610f2", "yellow", "brown", "peachpuff", "#6f42c1",
                   "#e83e8c", "#fd7e14", "#20c997", "#000000", "grey50", "#eeeeee")
 
-
+# Apply correct y-axis label based on radio button choice
 y_axis_labels <- c("Numerical Density (n/m<sup>2</sup>)",
                    "Biomass Density (g/m<sup>2</sup>)")
-
-
 density_list <- c("numerical_density", "biomass_density")
 
 
