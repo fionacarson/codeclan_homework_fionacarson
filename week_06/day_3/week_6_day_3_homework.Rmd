@@ -1,0 +1,176 @@
+---
+title: "Week 2 Day 1 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(infer)
+```
+
+# MVP
+
+## Question 1
+
+```{r}
+ames <- read_csv("ames.csv") %>% 
+  clean_names()
+```
+
+## Question 2
+
+Investigate the distribution of lot_area. Is the distribution roughly normal? If not, what problems do you find?
+
+```{r}
+ames %>% 
+  ggplot(aes(lot_area)) +
+  geom_histogram(binwidth = 1000)
+
+ames %>% 
+  ggplot(aes(lot_area)) +
+  geom_histogram(binwidth = 1000) +
+  xlim(0, 25000)
+```
+
+There are some very high values for lot_area in the data. This is skewing the data to the right. Will be interesting to see what this looks like in a qq plot. 
+If you zoom in on the 0 - 25000 area of the x-axis then the data doesn't look too far from a normal distribution. 
+
+```{r}
+qqnorm(ames$lot_area)
+```
+
+Wow this is the least linear qq plot I've seen so far. This data does not have a normal distribution. 
+
+## Question 3
+
+Compute and visualise a bootstrap sampling distribution for the mean(lot_area) of the sold houses.
+
+There are 2930 rows in the dataset. Lets try 5000 bootstrap samples and see how the computer copes
+
+```{r}
+mean_lot_area <- mean(ames$lot_area)
+
+infer_resample <- ames %>% 
+  specify(response = lot_area) %>% 
+  generate(reps = 5000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+
+infer_resample %>% 
+  ggplot(aes(stat)) +
+  geom_histogram(binwidth = 25,
+                 col = "white")
+```
+
+## Question 4
+
+Use your bootstrap distribution to calculate a 95% CI for mean(lot_area), and visualise it on the distribution
+
+```{r}
+infer_ci_95 <- infer_resample %>% 
+  get_ci(level = 0.95, type = "percentile")
+
+infer_resample %>% 
+  visualise(bins = 30) + 
+  shade_ci(endpoints = infer_ci_95)
+```
+
+## Question 5
+
+```{r}
+infer_ci_99 <- infer_resample %>% 
+  get_ci(level = 0.99, type = "percentile")
+
+infer_resample %>% 
+  visualise(bins = 30) + 
+  shade_ci(endpoints = infer_ci_99)
+```
+The 99% CI is broader than the 95% CI. This makes sense as the 99% confidence intervals is where you would find 99% of the data, where the 95% CI only includes 95% of the data. The limits would have to be widened to include the larger number of points. 
+
+## Question 6
+
+Calculate the point estimate of the mean(lot_area)
+
+```{r}
+point_est_mean_lot_area <- mean(infer_resample$stat)
+
+point_est_mean_lot_area
+```
+
+The point estimate of the mean(lot_area) is 10148.62. 
+The mean(lot_area) calculated from the original dataset is 10147.92.
+
+These means are quite close. 
+
+# Extension
+
+## Question 1
+
+Calculate a point estimate and 95% CI for the proportion of houses in the data built before 1920. Does the number of reps you use matter? [Investigate reps from 200 up to 50000, memory of your laptop permitting].
+
+```{r}
+prop_pre_1920 <- ames %>% 
+  filter(year_built < 1920) %>% 
+  summarise(prop_pre_1920 = n() / nrow(ames))
+
+prop_pre_1920
+```
+
+```{r}
+ames <- ames %>% 
+  mutate(before_1920 = ifelse(year_built < 1920, "yes", "no"))
+
+rep_num <- c(200, 500, 1000, 5000, 10000, 25000, 50000)
+
+results <- tibble()
+
+for (num_reps in rep_num) {
+ 
+  bootstrap_resample <- ames %>% 
+  specify(response = before_1920, success = "yes") %>% 
+  generate(reps = num_reps, type = "bootstrap") %>% 
+  calculate(stat = "prop")
+  
+  ci_95 <- bootstrap_resample %>% 
+  get_ci(level = 0.95, type = "percentile")
+  
+  before_1920_mean <- bootstrap_resample %>% 
+  summarise(mean_before_1920 = mean(stat)) 
+  
+  one_result <- c(
+    Num_of_reps = num_reps, 
+    lower = ci_95 %>% 
+      pull(lower_ci),
+    upper = ci_95 %>% 
+      pull(upper_ci),
+    before_1920_mean = before_1920_mean %>% 
+      pull()
+  )
+  
+  results <- results %>% 
+    bind_rows(one_result)
+  
+}
+
+rp <- c(200, 50000)
+mn <- c(0.06006826, 0.06006826)
+
+
+df <- tibble(rp, mn)
+
+
+ggplot() +
+  geom_point(data = results, aes(x = Num_of_reps, y = lower)) +
+  geom_point(data = results, aes(Num_of_reps, upper)) +
+  geom_point(data = results, aes(Num_of_reps, before_1920_mean)) +
+  geom_line(data = df, aes(x = rp, y = mn), col = "red")
+  
+```
+The graph above shows the upper and lower CIs and the proportion calculated with increasing number of reps. The lower number of reps (200, 500 and 1000) give proportions that are slightly higher than the actual proportion. Once we get to 5000 reps the proportion is very similar to the actual proportion and continues to be similar as teh number of reps increases. 
+It would appear that from this data 5000 reps is enough (not sure it is valid to say this!)
