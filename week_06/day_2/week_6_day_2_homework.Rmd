@@ -179,3 +179,39 @@ qqnorm(phones$rating)
 ```
 The line is straight in the middle but curves off at the end which can mean the data has more extreme values than would be expected in a nor mal distribution. 
 
+```{r}
+phones %>% 
+  filter(brand == "Samsung") %>% 
+  ggplot(aes(x = total_reviews)) +
+  geom_histogram(aes(y = ..density..),
+                 binwidth = 1)
+```
+
+```{r}
+phones %>% 
+  filter(brand == "Samsung") %>% 
+  ggplot(aes(x = rating)) + 
+  geom_histogram(aes(y = after_stat(density)),
+                 col = "white", 
+                 binwidth = 0.1) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = phones_stats$mean, 
+      sd = phones_stats$sd
+    ),
+    col = "red"
+  ) +
+  stat_function(
+    fun = dnorm, 
+    args = list(
+      mean = phones_stats$mean, 
+      sd = 1
+    ),
+    col = "blue"
+  ) 
+
+
+
+```
+
