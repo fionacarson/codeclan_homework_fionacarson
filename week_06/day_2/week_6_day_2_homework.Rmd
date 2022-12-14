@@ -170,7 +170,12 @@ ggqqplot(phones$rating)
 shapiro.test(phones$rating)
 ```
 
-Hmmm the website says p-value > 0.05 means distribution of data is not signficantly different from normal distribution. 
-Our data gives a tiny p-value which suggests the data is very different from a normal distribution. This is in contrary to what we found above. 
+Hmmm the website says p-value > 0.05 means distribution of data is not significantly different from normal distribution. 
+Our data gives a tiny p-value which suggests the data is very different from a normal distribution. This is in contrary to what I deduced above in question 4. 
 
+## Alternative way using qqnorm
+```{r}
+qqnorm(phones$rating)
+```
+The line is straight in the middle but curves off at the end which can mean the data has more extreme values than would be expected in a nor mal distribution. 
 
