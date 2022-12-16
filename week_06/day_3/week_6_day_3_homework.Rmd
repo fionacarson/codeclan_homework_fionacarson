@@ -168,7 +168,8 @@ df <- tibble(rp, mn)
 ggplot() +
   geom_point(data = results, aes(x = Num_of_reps, y = lower)) +
   geom_point(data = results, aes(Num_of_reps, upper)) +
-  geom_point(data = results, aes(Num_of_reps, before_1920_mean)) +
+  geom_point(data = results, aes(Num_of_reps, before_1920_mean))+
+#  geom_hline(yintercept = 0.06) # much more efficient way to do this
   geom_line(data = df, aes(x = rp, y = mn), col = "red")
   
 ```

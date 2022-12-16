@@ -1,0 +1,269 @@
+---
+title: "Week 2 Day 1 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+# 1 MVP
+
+## 1.1 Hypothesis testing - practical
+
+### Question 1
+
+```{r}
+library(tidyverse)
+library(infer)
+
+sleep <- msleep
+```
+
+```{r}
+glimpse(sleep)
+```
+
+```{r}
+skimr::skim(sleep)
+```
+
+```{r}
+sleep %>% 
+  ggplot(aes(sleep_total)) +
+  geom_histogram(col = "white")
+```
+
+The data is widely and quite evenly spread across the 24 hours in a day. 
+
+```{r}
+sleep %>% 
+  ggplot(aes(sleep_total)) +
+  geom_boxplot()
+```
+
+The median of sleep_total is just above 10 hours. 
+
+### Question 2
+
+**1. Hypothesis**
+
+H0: mean sleep_total = 7 hours a night  
+HA: mean sleep_total != 7 hours a night
+
+alpha: 0.05   
+0.05 chosen as the outcome as this is a standard value used for alpha in non-critical analysis. 
+
+This is a one sample test on the mean.
+
+**2. Calculate observed stat**
+
+```{r}
+mean_sleep <- sleep %>% 
+  summarise(mean_sleep = mean(sleep_total)) %>% 
+  pull()
+
+mean_sleep
+```
+
+The mean value is above 10 hours, which seems very different from the 7 hours that the jabberwocky sleeps but lets test this statistically. 
+
+**3. Null distribution**
+
+```{r}
+null_dist <- sleep %>% 
+  specify(response = sleep_total) %>% 
+  hypothesise(null = "point", mu = 7) %>% 
+  generate(reps = 10000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+```
+
+**4. Visualise**
+
+```{r}
+null_dist %>% 
+  visualise(bins = 25) +
+  shade_p_value(obs_stat = mean_sleep, 
+                direction = "both")
+```
+
+As expected the mean of the total_sleep for the animals in our dataset is much higher and appears far to the right of the null distribution. The p-value is expected to be very low. 
+
+**5. Calculate p-value**
+
+```{r}
+sleep_p_val <- null_dist %>% 
+  get_p_value(obs_stat = mean_sleep, 
+                direction = "both") %>% 
+  pull()
+
+format.pval(sleep_p_val)
+```
+
+The p-value is < 0.0001.
+
+**6. Conclusions**
+
+H0: mean sleep_total = 7 hours a night  
+HA: mean sleep_total != 7 hours a night
+
+The H0 hypothesis is rejected as the p value is < 0.0001 which is below our chosen alpha value of 0.05. 
+
+We can therefore say that the mean sleep_total for animals is our dataset is statistically different from the jabberwocky. 
+
+
+### Question 3
+
+This is a two sample test. We are determining whether the sleep_total has a dependence on whether an animal is an omnivore or herbivore. 
+
+H0: omnivore sleep_total <= herbivore sleep_total  
+HA: omnivore sleep_total > herbivore sleep_total
+
+alpha: 0.05
+
+```{r}
+herbi_omni_sleep <- sleep %>% 
+  filter(vore %in% c("herbi", "omni")) %>% 
+  select(vore, sleep_total)
+
+herbi_sleep <- herbi_omni_sleep %>% 
+  filter(vore == "herbi") %>% 
+  summarise(herbi_mean_sleep = mean(sleep_total))
+
+omni_sleep <- herbi_omni_sleep %>% 
+  filter(vore == "omni") %>% 
+  summarise(omni_mean_sleep = mean(sleep_total))
+
+sleep_diff = omni_sleep - herbi_sleep
+```
+
+From our dataset, on average omnivores sleep for 1.416 hours longer than herbivores. 
+
+
+```{r}
+null_dist_omni_herbi <- herbi_omni_sleep %>% 
+  specify(sleep_total ~ vore) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 10000, type = "permute") %>% 
+  calculate(stat = "diff in means",
+            order = c("omni", "herbi"))
+```
+
+```{r}
+null_dist_omni_herbi %>% 
+  visualise(bins = 25) +
+  shade_p_value(obs_stat = sleep_diff, 
+                direction = "greater")
+```
+
+```{r}
+null_dist_omni_herbi %>% 
+  get_p_value(obs_stat = sleep_diff, 
+                direction = "greater")
+```
+
+H0: omnivore sleep_total <= herbivore sleep_total  
+HA: omnivore sleep_total > herbivore sleep_total
+
+
+The p-value of 0.1232 is higher than our alpha of 0.05 and so we must reject the alternative hypothesis. Our analysis indicates that omnivores do not sleep for significantly longer than herbivores.
+
+### Question 4
+
+This is a one sample proportion test. 
+
+H0: proportion of domesticated animals <= 5%  
+HA: proportion of domesticated animlas > 5%
+
+alpha 0.05
+
+The conservation column (which contains the domesticated status) contains a lot of NAs. The dataset is small and on inspection no domesticated animals (except maybe humans!) were found to have a NA for conservation. 
+
+For this reason the total number of rows in the msleep dataset were used to calculated the proportion of domesticated animals. 
+
+
+
+```{r}
+# The null distribution analysis wouldn't run with yes, no and NA in the new is_dom. For the reasons stated above the NA values in this column were converted to "no"
+
+sleep_dom_col <- sleep %>% 
+  mutate(is_dom = ifelse(conservation == "domesticated", "yes", "no"))
+
+sleep_dom_col$is_dom <- sleep_dom_col$is_dom %>% 
+  replace_na("no")
+
+prop <- sleep_dom_col %>% 
+  filter(is_dom == "yes") %>% 
+  summarise(prop_dom = n() / nrow(sleep)) %>% 
+  pull()
+```
+
+The proportion of domesticated animal types in the dataset is 12.05%.
+
+```{r}
+prop_null_dist <- sleep_dom_col %>% 
+  specify(response = is_dom, success = "yes") %>% 
+  hypothesise(null = "point", p = 0.05) %>% 
+  generate(reps = 20000, type = "draw") %>% 
+  calculate(stat = "prop")
+```
+
+```{r}
+prop_null_dist %>% 
+  visualise(bins = 25) +
+  shade_p_value(obs_stat = prop, 
+                direction = "greater")
+```
+
+
+```{r}
+prop_null_dist %>% 
+  get_p_value(obs_stat = prop, 
+                direction = "greater")
+```
+
+The p value is 0.01 which is less than our alpha of 0.05 therefore we can reject our null hypothesis and conclude that the proportion of domesticated animal types in the population of animal types is greater than 5%. 
+
+## 1.2 Hypothesis Testing - Defining the Hypothesis
+
+### Question 1
+
+**Test:** One sample proportion test  
+**H0:** proportion of people who know of coffee shop <= 40%  
+**HA:** proportion of people who know of coffee shop > 40%  
+**Null distribution method:** draw  
+
+### Question 2
+
+**Test:** Two sample test - proportion - independent  
+**H0:** Group A CTR proportion >= Group B CTR  
+**HA:** Group A CTR proportion < Group B CTR  
+
+The banner is currently at the right hand side which is where Group A see it so to keep the status the same, the null hypothesis should be that the click through proportion is the same or greater than for Group B where the banner is at the top. 
+
+**Null distribution method:** bootstrap (after wrangling data at start)
+
+### Question 3
+
+**Test:** One sample mean test  
+**H0:** mean width = 145 mm  
+**HA:** mean width != 145 mm  
+**Null distribution method:** bootstrap 
+
+## 1.3 Hypothesis Testing - Interpreting Results
+
+### Question 1
+
+The calculated p-value (0.07) is greater than the chosen alpha (0.05) therefore we cannot reject the null hypothesis. We can reject the alternative hypothesis which states that more than 40% of the towns population have heard of the coffee shop. We were wrong and our boss was right :( Just don't tell them you've done the analysis!
+
+### Question 2
+
+The calculated p-value (0.006) is lower than the chosen alpha (0.01). We can therefore reject the null hypothesis which states that the click through rate is the same or higher when the banner is at the side. Our data shows the click through rate is higher when the banner is positioned at the top of the page. 
+
+### Question 3
+
+The calculated p-value (0.55) is higher than the chose alpha (0.05). We can therefore reject the alternative hypothesis. The data tells us the parts are within specification. 
+
+
