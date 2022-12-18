@@ -320,21 +320,83 @@ item_A_invoice_nums <- transactions %>%
   filter(stock_code == "22469") %>% 
   distinct(invoice_no)
 
-transactions %>% 
+item_A_invoice_nums <- item_A_invoice_nums$invoice_no
+
+item_A_B_invoice_nums <- transactions %>% 
   filter(stock_code == "21110") %>% 
-  filter(invoice_no %in% c(item_A_invoice_nums))
-
-%>% 
-  group_by(invoice_no) %>% 
-  summarise(items_per_trans = n()) %>% 
-  filter(items_per_trans > 1) %>% 
+  filter(invoice_no %in% item_A_invoice_nums) %>% 
   select(invoice_no)
- 
 
-transactions %>%
-  filter(invoice_no %in% invoices$invoice_no)
+sup_AB <- nrow(item_A_B_invoice_nums) / total_transactions
+
+sup_AB
+
+```
+
+```{r}
+conf_AB <- sup_AB / sup_A
+conf_AB
+```
+
+The probability of A and B being purchased together is 0.00356.
+
+The proportion of purchases of A where B has also been purchased is 0.00463.
+
+### Question 3
+
+```{r}
+# item B was never purchased twice in one transaction, all invoice number 
+# are unique
+item_B_trans <- transactions %>% 
+  filter(stock_code == "21110") %>% 
+  summarise(n()) %>% 
+  pull()
+
+sup_B <- item_B_trans / total_transactions
+sup_B
 
 
+```
 
+```{r}
+lift_AB <- sup_AB / (sup_A * sup_B)
+
+lift_AB
+```
+
+lift(A->B) is 4.65 which is greater than 1 so we can conclude that A and B are more likley to be bought together. 
+
+It seems like this follows the example given in the homework. 
+sup(A->B) is low but has a lift greater than 1 so when A is purchased B is often purchased with it (high lift) but such transactions don't happen all that frequently. 
+
+
+```{r}
+library(arules)
+library(arulesViz)
+```
+
+```{r}
+rm(transactions)
+
+transactions <- read_csv("data/online_retail_subset.csv")
+
+
+transactions_reformat <- transactions %>%
+  select(InvoiceNo, Description) %>%
+  na.omit()
+
+write_csv(transactions_reformat, "transactions_reformat.csv")
+
+apriori_format <- read.transactions("transactions_reformat.csv", format = "single", sep = ",", header = TRUE, cols = c("InvoiceNo", "Description"))
+```
+
+```{r}
+inspect(head(apriori_format))
+```
+
+```{r}
+rules <- apriori(apriori_format, parameter = list(supp = 0.01, conf = 0.5, target = "rules"))
+
+inspect(rules[1:10])
 ```
 
