@@ -267,3 +267,56 @@ The calculated p-value (0.006) is lower than the chosen alpha (0.01). We can the
 The calculated p-value (0.55) is higher than the chose alpha (0.05). We can therefore reject the alternative hypothesis. The data tells us the parts are within specification. 
 
 
+Removing variables created in MVP section
+```{r}
+rm(list = ls())
+```
+
+
+# Extensions
+
+## Market Basket Analysis
+
+```{r}
+transactions <- read_csv("data/online_retail_subset.csv") %>% janitor::clean_names()
+```
+
+```{r}
+glimpse(transactions)
+```
+
+
+
+item A - ‘HEART OF WICKER SMALL’ (StockCode 22469)
+item B - ‘LARGE CAKE TOWEL PINK SPOTS’ (StockCode 21110)
+
+### Question 1
+
+
+```{r}
+total_transactions <-  transactions %>% 
+  distinct(invoice_no) %>% 
+  summarise(n()) %>% 
+  pull()
+
+item_A_trans <- transactions %>% 
+  filter(stock_code == "22469") %>%  # get 110 rows 
+  # some transaction purchased 2 of the items of interest
+  distinct(invoice_no) %>% 
+  summarise(n()) %>% 
+  pull()
+
+sup_A <- item_A_trans / total_transactions
+sup_A
+```
+
+The support for item A is 0.0768
+
+### Question 2
+
+```{r}
+
+
+
+```
+
