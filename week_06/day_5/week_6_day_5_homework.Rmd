@@ -313,8 +313,26 @@ sup_A
 The support for item A is 0.0768
 
 ### Question 2
+Calculate the support and confidence for rule (A→B).
 
 ```{r}
+item_A_invoice_nums <- transactions %>% 
+  filter(stock_code == "22469") %>% 
+  distinct(invoice_no)
+
+transactions %>% 
+  filter(stock_code == "21110") %>% 
+  filter(invoice_no %in% c(item_A_invoice_nums))
+
+%>% 
+  group_by(invoice_no) %>% 
+  summarise(items_per_trans = n()) %>% 
+  filter(items_per_trans > 1) %>% 
+  select(invoice_no)
+ 
+
+transactions %>%
+  filter(invoice_no %in% invoices$invoice_no)
 
 
 
