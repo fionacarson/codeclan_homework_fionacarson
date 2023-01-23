@@ -76,8 +76,8 @@ ui <- fluidPage(
   ),
   
   tags$a("Data source: Caithness District Salmon Fisheries Board, 
-         Yearly Reports on Surveys of Juvenile Salmonids in Caithness Rivers", 
-         href = "https://caithness.dsfb.org.uk/publications/")
+         Yearly Reports on Surveys of Juvenile Salmonids in Caithness Rivers.", 
+         href = "https://caithness.dsfb.org.uk/publications/", "Provided under the terms of the Open Government Licence.")
 )
 
 
