@@ -1,0 +1,150 @@
+---
+title: "Week 10 Day 1 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(ggfortify)
+library(modelr)
+```
+
+
+```{r}
+pm <- read_csv("data/project_management.csv")
+```
+
+```{r}
+pm %>% 
+  ggplot(aes(estimated_length, actual_length)) +
+  geom_point()
+```
+
+```{r}
+pm %>% 
+summarise(cor(estimated_length, actual_length))
+```
+The 2 variables are positively correlated. 
+On the Evans strength of correlation scale this is a very strong correlation. 
+
+```{r}
+model <- lm(actual_length ~ estimated_length, data = pm)
+
+summary(model)
+
+fitted(model)
+```
+
+slope = 1.2234
+intercept = 1.4164
+R2 = 0.6475
+
+The R2 value tells us that 64.75% of the data can be predicted with the model 
+
+```{r}
+autoplot(model)
+```
+
+1. Residual vs fitted - doesn't look good at high values
+2. QQ - looks ok but one outlier at top end
+3. Scale - Location - possibly a funnel shape 
+
+The plots suggest that the p-value is not reliable. 
+
+```{r}
+pm %>% 
+  ggplot(aes(estimated_length, actual_length)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_text(aes(label = 1:nrow(pm)), nudge_y = 1)
+```
+
+outliers = 5 and 18 and possibly 23
+
+5 is influential
+23 is not influential and 18 is not influential
+
+
+```{r}
+autoplot(model, which = 4)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(model)
+```
+
+```{r}
+pm_without_18 <- pm %>% 
+  filter(!(estimated_length == 15 & actual_length == 13))
+```
+
+```{r}
+model_wo18 <- lm(actual_length ~ estimated_length, data = pm_without_18)
+
+summary(model_wo18)
+```
+Previous Results
+slope = 1.2234
+intercept = 1.4164
+R2 = 0.6475
+
+without point 18 results
+slope = 1.2211
+intercept = 1.5911
+R2 = 0.6811
+
+The R2 has improved a bit, the gradient isn't much different but the intercept is higher. 
+
+
+```{r}
+ggplot(pm, aes(estimated_length, actual_length)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_abline(slope = 1.2211, intercept = 1.5911, colour = "red")
+  
+```
+
+
+```{r}
+pm_without_5 <- pm %>% 
+  filter(!(estimated_length == 22 & actual_length == 39))
+```
+
+```{r}
+model_wo5 <- lm(actual_length ~ estimated_length, data = pm_without_5)
+
+summary(model_wo5)
+```
+
+
+All Data Results
+slope = 1.2234
+intercept = 1.4164
+R2 = 0.6475
+
+without point 5 results
+slope = 1.0114
+intercept = 4.3806
+R2 = 0.6498498
+
+The R2 has improved a bit compared to the R2 for all the data but it is not as good as the R2 for the data with point 18 removed. 
+
+The gradient is less steep which makes sense as we have removed a point which has high on the y-axis. 
+
+The intercept is higher. 
+
+```{r}
+ggplot(pm, aes(estimated_length, actual_length)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_abline(slope = 1.2211, intercept = 1.5911, colour = "red") +
+  geom_abline(slope = 1.0114, intercept = 4.3806, colour = "green")
+```
+
