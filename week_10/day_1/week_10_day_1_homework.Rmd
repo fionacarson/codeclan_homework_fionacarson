@@ -148,3 +148,30 @@ ggplot(pm, aes(estimated_length, actual_length)) +
   geom_abline(slope = 1.0114, intercept = 4.3806, colour = "green")
 ```
 
+
+
+
+```{r}
+library(MASS)
+
+ggplot(pm, aes(estimated_length, actual_length)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  geom_smooth(method = "rlm", colour = "red", fill = "red")
+```
+
+```{r}
+model <-  rlm(actual_length ~ estimated_length, data = pm)
+
+summary(model)
+
+```
+
+```{r}
+library(broom)
+
+tidy(model)
+
+glance(model)
+```
+
