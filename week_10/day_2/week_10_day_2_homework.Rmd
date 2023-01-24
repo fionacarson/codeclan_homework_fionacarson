@@ -1,0 +1,359 @@
+---
+title: "Week 10 Day 2 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+# Features and Elements of Multiple Regression
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggfortify)
+library(fastDummies)
+library(mosaic)
+```
+
+## 1 MVP
+
+### 1.1 Load and explore data
+
+```{r}
+houses <- read_csv("data/housing_prices.csv")
+```
+
+
+
+
+
+
+```{r}
+summary(houses)
+
+glimpse(houses)
+
+skimr::skim(houses)
+```
+
+There are 10 variables, 9 are numeric and at a first glance appear to be continuous. 
+
+total_bedrooms is missing 200 observations, none of the other columns contain missing data. 
+
+## 1.2 
+
+```{r}
+ggpairs(houses, columns = c("total_rooms", "total_bedrooms"))
+```
+
+The correlation value is 0.934 which suggests total_rooms and total_bedrooms are very strongly correlated. The relationship is evident in the scatter plot too. 
+
+## 1.3 
+
+```{r}
+houses_trim <- houses %>% 
+  select(-total_bedrooms)
+```
+
+## 1.4i
+
+
+
+
+```{r}
+ggpairs(houses_trim, progress = FALSE)
+```
+
+
+
+## 1.4ii
+
+Significant correlations with median_house_value
+median_income; cor = 0.643
+
+Possible correlations:
+latitude; cor = -0.148 (could indicate closer to sea)
+total_rooms; cor = 0.143
+ocean_proximity; boxplot indicates one category has higher prices and one category has lower prices
+
+median_income
+```{r}
+ggplot(houses, aes(median_income, median_house_value)) +
+  geom_point(alpha = 0.1)
+
+
+```
+
+latitude
+```{r}
+ggplot(houses, aes(latitude, median_house_value)) +
+  geom_point(alpha = 0.1)
+```
+
+This is interesting and latitude probably needs to be taken into consideration with longitude, otherwise it is like you are taking a line across the area and expecting all the houses to cost the same. 
+
+total_rooms
+
+```{r}
+ggplot(houses, aes(total_rooms, median_house_value)) +
+  geom_point(alpha = 0.1)
+```
+
+Surely the total rooms is highly dependent on the number of households - so if you calculate mean_room_per_household it might mean something. 
+
+ocean_proximity
+
+```{r}
+ggplot(houses, aes(ocean_proximity, median_house_value)) +
+  geom_boxplot()
+```
+
+Island appears to have the effect of increasing median house value while inland has the opposite effect and decreases the value. 
+
+## 5.
+
+Ocean proximity has 5 levels so we would expect 4 dummy variables
+
+
+## 6. 
+
+```{r}
+model <- lm(
+  median_house_value ~ median_income, 
+  data = houses
+)
+```
+
+```{r}
+summary(model)
+```
+The p-value is very low but we still need to check its valid. 
+The R2 is 41% which is reasonable. 
+
+```{r}
+autoplot(model)
+```
+
+Plot 1: Its hard ot interpret plot because of the large number of points but there appears to be some sort of upper limit for residuals depending on the fitted value. 
+
+Plot 2: A lot of the values are along the line but there is alos a bit of deviation
+
+Plot 3: The upper limit observed in plot 1 is visible again here. This looks like heteroskewdasticity. 
+
+```{r}
+ggplot(houses, aes(median_income, median_house_value)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm")
+
+
+```
+
+
+```{r}
+ggplot(houses) +
+  geom_density(aes(x = median_house_value))
+```
+
+The data is capped at 500000. There is some discussion about it on Kaggle but they discuss a large number of houses being entered as 50001. This data appears to have been removed from the dataset we are using. 
+The dataset on Kaggle has 20640 rows, the one we are using has 19675. The Kaggle discussion mentions 965 rows at 50001 median house value so these number make sense. 
+
+
+Ok so if we are ok with this upper limit then the diagnostics look ok and the p-value is low so median income is significant in terms of our model.
+
+## 7.
+
+Going to add ocean proximity as it seems to be the other main variable that has an effect. 
+
+First need to convert to dummy columns
+```{r}
+houses_dummy <- houses %>% 
+  dummy_cols(select_columns = "ocean_proximity",
+             remove_first_dummy = TRUE) %>% 
+  janitor::clean_names() %>% 
+  mutate(across(ocean_proximity_inland:ocean_proximity_near_ocean, as.logical))
+
+```
+
+island and inland were kept as columns. The less than 1 h from ocean column was removed as the dummy column. Deliberately left the ocean_proximity column in.
+
+Now to build model including the island variable. 
+
+```{r}
+model_2 <- lm(
+  median_house_value ~ median_income + ocean_proximity_island,
+  data = houses_dummy
+)
+  
+```
+
+
+```{r}
+summary(model_2)
+```
+
+R2 is still 41% so no big improvement there
+The p-values of island is low (lets check the diagnostics)
+
+```{r}
+autoplot(model_2)
+```
+
+The plots all look similar to when it was just median_income
+
+
+```{r}
+plotModel(model_2)
+```
+
+Can see now why the island category has a different median_house_value but doesn't change model much - there aren't many observations for this category. 
+
+```{r}
+houses_dummy %>% 
+  filter(ocean_proximity_island == TRUE) %>% 
+  summarise(total = n())
+```
+
+Oh dear, only 5 observations for island. Lets check the other categories. 
+
+```{r}
+houses_dummy %>% 
+  group_by(ocean_proximity) %>% 
+  summarise(total = n())
+```
+
+The other variable category which had an effect was ocean proximity = inland and there are 6524 observations for this so lets try this instead.
+
+```{r}
+model_3 <- lm(
+  median_house_value ~ median_income + ocean_proximity_inland,
+  data = houses_dummy
+)
+```
+
+```{r}
+summary(model_3)
+```
+
+The R2 has improved a bit and is now 55% (up from 41%).
+The p-value is low but we haven't checked diagnostics yet
+The rse seems quite high at 65710
+
+```{r}
+autoplot(model_3)
+```
+
+Plot 1: It looks like a lot more points above the line but it is hard to tell when there are so many. 
+
+Plot 2: looks ok, not obviously better or worse than for median_income alone
+
+Plot 3: Really looks like a funnel shape but is it just caused by the data being cut off at 50000?
+
+```{r}
+plotModel(model_3, alpha = 0.1)
+```
+
+```{r}
+plotModel(model_3) + facet_wrap( ~ ocean_proximity_inland)
+```
+
+ocean_proximity_inland is significant in terms of our model. When it is TRUE it has the effect of lowering the median_house_value. 
+
+# 2 Extension
+
+## 2.8
+
+### Interaction between log(median_income) and ocean_proximity_inland
+
+Try adding an interaction between log(median_income) and your chosen categorical predictor. Do you think this interaction term is statistically justified?
+
+```{r}
+model_interactions <- lm(
+  formula = median_house_value ~ median_income + ocean_proximity_inland + log(median_income):ocean_proximity_inland,
+  data = houses_dummy
+)
+```
+
+```{r}
+summary(model_interactions)
+```
+
+I don't understand why there is a TRUE and FALSE value for the interaction - we didn't get this in the class example?
+
+p-values are very low   
+R2 is 55% so lower than for just median_income and ocean_proximity_inland
+
+
+
+```{r}
+plotModel(model_interactions)
+```
+
+```{r}
+autoplot(model_interactions)
+```
+
+I can' see any different in these plots compared to any of the others I've run??
+
+## Perhaps the question meant to run this interation on its own?? But it does say adding. 
+Try it on its own anyway...
+
+```{r}
+model_interactions2 <- lm(
+  formula = median_house_value ~ log(median_income):ocean_proximity_inland,
+  data = houses_dummy
+)
+```
+
+```{r}
+summary(model_interactions2)
+```
+
+```{r}
+autoplot(model_interactions2)
+```
+
+
+
+
+
+```{r}
+plotModel(model_interactions2)
+```
+
+```{r}
+ggplot(houses_dummy, aes(log(median_income), median_house_value, 
+                         colour = ocean_proximity_inland, alpha = 0.1)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+I don't know whether its statistically justified. The diagnostic plots look the same for every combination I've run, except for the shift along the x-axis. Either I'm doing something wrong or this is not a good example to be working with. I feel like I know less that when I started. 
+
+
+
+## Creating a new variable which is the mean number of rooms 
+
+```{r}
+houses_dummy <- houses_dummy %>% 
+  mutate(mean_rooms = total_rooms / households, .after = total_rooms)
+```
+
+
+
+```{r}
+model_4 <- lm(
+  median_house_value ~ median_income + ocean_proximity_inland + mean_rooms,
+  data = houses_dummy
+)
+```
+
+```{r}
+summary(model_4)
+```
+
+Wow this is not significant at all - interesting. You would really think that the number of rooms in a house would affect the price but I suppose it maybe doesn't account for really expensive 1 bed flats in the city?
+
