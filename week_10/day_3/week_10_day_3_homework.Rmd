@@ -19,6 +19,7 @@ library(GGally)
 library(ggfortify)
 library(fastDummies)
 library(mosaic)
+library(modelr)
 ```
 
 ```{r}
@@ -224,6 +225,118 @@ Does sqft_above look any better?
 
 ```{r}
 houses_tidy %>% 
-  
+  ggplot(aes(price, sqft_above)) +
+  geom_point()
 ```
 
+No the sqft_above data looks the same as sqft_living
+
+What if we just try bedrooms on its own as the first predictor?
+
+### First predictor (again!)
+
+```{r}
+model1b <- lm(price ~ bedrooms, 
+              data = houses_tidy)
+
+summary(model1b)
+```
+
+R2 is low, bedrooms isn't explaining much of the variation. I think we have to go with sqft_living. 
+
+Lets press on with model2b (price ~ sqft_living + bedrooms(with 33 altered))
+
+### Third Predictor
+
+```{r}
+model3 <- lm(price ~ sqft_living + bedrooms + waterfront, 
+             data = houses_tidy)
+
+summary(model3)
+```
+
+We're up to R2 = 0.542 now, rse reducing slightly but still very high. 
+p-values very low and diagnostic plots ok
+
+```{r}
+autoplot(model3)
+```
+
+We're up to R2 = 0.542 now, rse reducing slightly but still very high. 
+p-values very low and diagnostic plots ok (ish) (I think??)
+Something odd has happened to leverage graph
+
+## Fourth Predictor
+
+Lets look at the residuals to see what can best explain them. 
+
+```{r}
+houses_resid <- houses_tidy %>% 
+  add_residuals(model3)
+```
+
+```{r}
+houses_tidy_numeric <- houses_resid %>%
+  select_if(is.numeric)
+
+houses_tidy_nonnumeric <- houses_resid %>%
+  select_if(function(x) !is.numeric(x))
+
+houses_tidy_nonnumeric$resid <- houses_resid$resid
+```
+
+
+
+
+
+```{r, message = FALSE}
+ggpairs(houses_tidy_numeric, progress = FALSE)
+```
+
+**Correlation with Residuals - Numeric Columns**
+
+latitude - weak positive (0.396) close to being moderate though
+yr_built - weak negative (-0.240)
+
+
+```{r, message = FALSE}
+ggpairs(houses_tidy_nonnumeric, progress = FALSE)
+```
+
+
+**Correlation with Residuals - Non-Numeric Columns**
+
+grade = "high" is showing a bit of correlation 
+None of the others are very convincing
+
+Add grade as 4th predictor
+
+```{r}
+model4 <- lm(price ~ sqft_living + bedrooms + waterfront + grade,
+             data = houses_tidy)
+
+summary(model4)
+```
+
+R2 is now 0.57 with rse 240800
+grade = "high" has a p-value < 0.01 but grade = "average" has a high p-value and is not significant.
+
+```{r}
+autoplot(model4)
+```
+
+```{r}
+plot(model4)
+```
+
+```{r}
+anova(model3, model4)
+```
+
+Adding grade is statistically significant
+
+```{r}
+anova(model2b, model3)
+```
+
+Adding waterfront is statistically significant. 
