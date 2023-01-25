@@ -165,7 +165,7 @@ p-value < 0.01
 
 ### Second Predictor
 
-The next strongest correlation for the numeric variables was sqft_above but this is really very similar to sqft_living so lets not do it next. Bedrooms has a moderate correlation with price so try that next. 
+The next strongest correlation for the numeric variables was sqft_above but this is really very similar to sqft_living so lets not do it next. Bathrooms has a moderate correlation with price so should have tried that next but in my exhausted delirium I added bedrooms by accident. Realise when I came back to check things over but when I changed bedrooms to bathrooms I found it didn't improved the model at all so maybe bedrooms is the better chose as 2nd predictor. 
 
 ```{r}
 model2 <- lm(price ~ sqft_living + bedrooms, 
@@ -173,22 +173,19 @@ model2 <- lm(price ~ sqft_living + bedrooms,
 
 summary(model2)
 ```
-R2 = 0.507 so not added much from model 1 (R2 = 0.493)
-rse = 257800 still very high 
+R2 = 0.508 so not added much from model 1 (R2 = 0.493)
+rse = 257500 still very high 
 
 ```{r}
 autoplot(model2)
 ```
 ```{r}
 plot(model2)
-
-houses %>% 
-  slice(15871)
 ```
 
 
 
-We seem to be fiting a negative values - what is going on here?
+We seem to be fitting a negative values - what is going on here?
 
 ```{r}
 houses %>% 
@@ -266,7 +263,7 @@ We're up to R2 = 0.542 now, rse reducing slightly but still very high.
 p-values very low and diagnostic plots ok (ish) (I think??)
 Something odd has happened to leverage graph
 
-## Fourth Predictor
+### Fourth Predictor
 
 Lets look at the residuals to see what can best explain them. 
 
@@ -340,3 +337,98 @@ anova(model2b, model3)
 ```
 
 Adding waterfront is statistically significant. 
+
+
+### Third Predictor (again)
+
+What if we try latitude as 3rd predictor?
+
+```{r}
+model3b <- lm(price ~ sqft_living + bedrooms + lat, 
+              data = houses_tidy)
+
+summary(model3b)
+```
+
+Adding latitude as 3rd predictor takes us up to R2 = 0.5781
+
+### Fourth Predictor (again)
+
+Lets add previous 3rd predictor in which was waterfront
+
+```{r}
+model4b <- lm(price ~ sqft_living + bedrooms + lat + waterfront,
+              data = houses_tidy)
+
+summary(model4b)
+```
+
+Cool, now we're at R2 0.6147
+rse still horribly high
+p-values all very low
+
+```{r}
+autoplot(model4b)
+```
+
+### Residuals
+
+Lets look at the residuals again to see what can best explain them. 
+
+```{r}
+houses_resid <- houses_tidy %>% 
+  add_residuals(model4b)
+```
+
+```{r}
+houses_tidy_numeric <- houses_resid %>%
+  select_if(is.numeric)
+
+houses_tidy_nonnumeric <- houses_resid %>%
+  select_if(function(x) !is.numeric(x))
+
+houses_tidy_nonnumeric$resid <- houses_resid$resid
+```
+
+
+
+```{r, message = FALSE}
+ggpairs(houses_tidy_numeric, progress = FALSE)
+```
+
+
+yr_built (-0.188) and longitude (-0.153) both have very weak negative correlations with the residuals
+
+
+
+```{r, message = FALSE}
+ggpairs(houses_tidy_nonnumeric, progress = FALSE)
+```
+
+Could try view? Grade doesn't seem to make sense anymore as the lowest grade has a higher median than average and isn't much different from the high level?
+
+### Seventh Predictor!!!
+What happens if we add all our remaining potential predictors?? Woohoo, am going nuts!
+
+```{r}
+model5 <- lm(price ~ sqft_living + bedrooms + lat + waterfront + long + view + grade,
+              data = houses_tidy)
+
+summary(model5)
+```
+
+Still only at R2 = 0.664
+rse = 212800 so still very big
+
+The grades aren't statistically significant which isn't that surprising. Lets change it to condition. 
+
+```{r}
+model5b <- lm(price ~ sqft_living + bedrooms + lat + waterfront + long + view + condition,
+              data = houses_tidy)
+
+summary(model5b)
+```
+
+Only condition = 5 is statistically significant. I think this means I have to group them?
+
+Might have to give up here and go to bed. Night night zzzzzzzzz   
