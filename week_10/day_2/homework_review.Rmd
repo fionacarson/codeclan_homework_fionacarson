@@ -1,0 +1,189 @@
+---
+title: "Week 10 Day 2 Homework Review"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggfortify)
+library(fastDummies)
+library(mosaic)
+library(leaflet)
+```
+
+
+```{r}
+houses <- read_csv("data/housing_prices.csv")
+```
+
+
+```{r}
+top10_houses <- houses %>% 
+  slice_max(median_house_value, n = 10)
+```
+
+```{r}
+top100_houses <- houses %>% 
+  slice_max(median_house_value, n = 100)
+
+bottom100_houses <- houses %>% 
+  slice_min(median_house_value, n = 100)
+
+leaflet() %>% 
+  addTiles() %>% 
+  addCircles(lng = top100_houses$longitude, lat = top100_houses$latitude) %>% 
+  addCircles(lng = bottom100_houses$longitude, lat = bottom100_houses$latitude,
+             color = "red") 
+
+```
+
+```{r}
+houses <- houses %>% 
+  mutate(rooms_per_house = total_rooms / households,
+         people_per_house = population / households,
+         bedrooms_per_house = total_bedrooms / households,
+         bedrooms_per_person = total_bedrooms / population,
+         rooms_per_person = total_rooms / population, 
+         # non_bedrooms = total_rooms - total_bedrooms, 
+         prop_bedrooms = total_bedrooms / total_rooms)
+
+```
+
+Observation: lots of the "count" data - non-zero, integer stuff - is highly +vely skewed - we should consider log transforamtions if we're doing linear regression. 
+
+```{r}
+house_log <- houses %>% 
+  select(-c(latitude, longitude, ocean_proximity)) %>% 
+  mutate(across(everything(), .fns = log))
+  
+colnames(house_log) <- paste("log", colnames(house_log), sep = "_")
+
+house_augment <- houses %>% 
+  bind_cols(house_log)
+
+```
+
+We now have a dataset with a richer feature set
+Lets start looking for relationships between variables, especially between our response variable and the potential predictors. 
+
+We can use ggpairs for this
+
+
+
+```{r message=FALSE}
+ggpairs1 <- house_augment %>% 
+  select(median_house_value, housing_median_age, median_income, ocean_proximity) %>% 
+  ggpairs(progress = FALSE)
+
+ggpairs1
+```
+
+```{r}
+houses %>% 
+ggplot() +
+  aes(y=latitude, x= longitude, colour = ocean_proximity) +
+  geom_point() +
+  scale_colour_brewer(palette = "Paired")
+```
+
+```{r}
+house_augment <- house_augment %>% 
+  mutate(ocean_prox_sarah = if_else(
+    ocean_proximity %in% c("ISLAND", "NEAR BAY", "NEAR OCEAN"), "NEAR WATER",
+    ocean_proximity),
+    ocean_prox_jamie = if_else(
+      ocean_proximity %in% c("<1H OCEAN", "NEAR BAY", "NEAR OCEAN"), "NEAR WATER",
+      ocean_proximity
+    )
+  )
+
+
+```
+
+```{r, message = FALSE}
+ggpairs1 <- house_augment %>% 
+  select(median_house_value, housing_median_age, median_income, ocean_prox_sarah,
+         ocean_prox_jamie) %>% 
+  ggpairs(aes(fill = ocean_prox_sarah, colour = ocean_prox_sarah, alpha = 0.1), progress = FALSE)
+
+ggpairs1
+```
+
+we can use ggpairs to understand the relationships better and start making candidates for what might be the best predictors. 
+
+```{r, warning = FALSE, message = FALSE}
+house_augment %>% 
+  select(median_house_value, 
+         log_bedrooms_per_house,
+         log_bedrooms_per_person,
+         log_households,
+         log_prop_bedrooms,
+         log_total_bedrooms,
+         ocean_prox_sarah,
+         ocean_prox_jamie) %>% 
+  ggpairs(aes(fill = ocean_prox_sarah,
+              color = ocean_prox_sarah, 
+              alpha = 0.5), progress = FALSE)
+
+```
+
+Lets start by finding the best single-predictor model for log(median_house_value)
+Candidates: (log_)median_income, ocean_prox(_group)
+
+```{r}
+mod1a <- lm(log(1 + median_house_value) ~ log(1 + median_income),
+            data = house_augment)
+
+summary(mod1a)
+```
+
+```{r}
+mod1b <- lm(log(median_house_value) ~ log(median_income),
+            data = house_augment)
+
+summary(mod1b)
+```
+
+```{r}
+mod1b <- lm(median_house_value ~ ocean_proximity,
+            data = house_augment)
+
+summary(mod1b)
+```
+
+The missing ocean_proximity (<1 h ocean) has "gone into" intercept. So inland is less than <1h ocean while island is 0.584 more. 
+
+```{r}
+mod1c <- lm(log(1 + median_house_value) ~ ocean_proximity + log(median_income),
+            data = house_augment)
+
+summary(mod1c)
+```
+
+```{r}
+plot(mod1a)
+```
+
+```{r}
+house_augment %>% 
+ggplot() +
+aes(x = log(median_income), y= log(median_house_value)) +
+geom_point()
+```
+
+Two new ideas:
+
+1. using our model error ("residuals") to help decide what variables to add next
+
+2. what do you do when not all of the levels of a categoric variable are significant?
+  either include all or none
+  how do you know which?
+  ANOVA test
+  check in the model with is signficant.......?????

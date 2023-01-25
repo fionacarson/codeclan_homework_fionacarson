@@ -1,0 +1,229 @@
+---
+title: "Week 10 Day 3 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+# MVP
+
+## Question 1
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggfortify)
+library(fastDummies)
+library(mosaic)
+```
+
+```{r}
+houses <- read_csv("data/kc_house_data.csv")
+```
+
+```{r}
+summary(houses)
+```
+
+No missing data
+
+```{r, tidying data for regression}
+# removing columns that aren't needed
+houses_tidy <- houses %>% 
+  select(-c(date, id, sqft_living15, sqft_lot15, zipcode)) %>% 
+# converting waterfront column to logical
+  mutate(waterfront = as.logical(waterfront)) %>% 
+# converting yr_renovated to logical renovated column
+  mutate(yr_renovated = ifelse(yr_renovated == 0, FALSE, TRUE)) %>% 
+  rename(renovated = yr_renovated) %>% 
+# convert view to factor (categorical ordinal)
+  mutate(view = factor(view, levels = c(0, 1, 2, 3, 4))) %>% 
+# convert condition to factor (categorical ordinal)
+  mutate(condition = factor(condition, levels = c(1, 2, 3, 4, 5))) %>% 
+# lets group together grade - low (1-3), average (4-10), high (11-13)
+  mutate(grade = case_when(
+    grade < 4 ~ "low", 
+    grade >10 ~ "high",
+    TRUE ~ "average"
+  ),
+  grade = factor(grade, levels = c("low", "average", "high"))
+  )
+```
+
+## Question 2
+
+```{r}
+alias(lm(price ~ ., data = houses_tidy))
+```
+
+alias has detected that sqft_basement can be calculated from sqft_living minus sqft_above. 
+This means we can removed sqft_basement. 
+
+```{r}
+houses_tidy <- houses_tidy %>% 
+  select(-sqft_basement)
+```
+
+## Question 3
+
+```{r}
+houses_tidy_numeric <- houses_tidy %>%
+  select_if(is.numeric)
+
+houses_tidy_nonnumeric <- houses_tidy %>%
+  select_if(function(x) !is.numeric(x))
+
+houses_tidy_nonnumeric$price <- houses_tidy$price
+```
+
+```{r, message = FALSE}
+ggpairs(houses_tidy_numeric, progress = FALSE)
+```
+
+
+**Correlation with price - Numeric Variables**
+
+Strong positive correlations
+1. sqft_living (0.702)
+2. sqft_above (0.606)
+
+Moderate correlation
+3. bathrooms (0.525)
+
+Weak correlations
+4. bedrooms (0.308)
+5. latitude (0.307)
+6. floors (0.257)
+
+Very week correlations
+7. sqft_lot (0.09)
+8. yr_built (0.054)
+9. longitude (0.022)
+
+
+
+```{r, message = FALSE}
+ggpairs(houses_tidy_nonnumeric, progress = FALSE)
+```
+
+**Correlation with price - Non-Numeric Variables**
+
+waterfront - appears to affect price
+
+View - there is a correlation with price, the median of the 5 levels generally increases with better views (less obvious between levels 1 and 2). The highest and lowest levels of view clearly have an effect on price.
+
+condition - no obvious correlation here
+
+grade - looks like a good correlation here with a decent increase in price related to the highest grade of building. This looks like the strongest correlation from the non-numeric variables. 
+
+renovated - may be a correlation but not a strong one from looking at boxplots
+
+Conclusion 
+predictors to investigate in order of potential
+grade = "high"
+waterfront = TRUE
+view = 4 (or view - 0, I'm not sure)
+
+### First Predictor - sqft_living
+
+```{r}
+model1 <- lm(price ~ sqft_living,
+             data = houses_tidy)
+
+summary(model1)
+```
+
+```{r}
+autoplot(model1)
+```
+
+```{r}
+plot(model1)
+```
+
+
+Not sure these diagnostic plots look great but have plotted the data below and I think the issue is caused by the shape of the data. It appears to have very defined cut-offs but I don't know why?
+
+
+```{r}
+houses %>% 
+  ggplot(aes(price, sqft_living)) +
+  geom_point(alpha = 0.1)
+```
+
+Conclusion
+I have reservations about the shape of the data and consquently the diagnostic plots but lets go with this for now. 
+R2 = 0.493
+rse = 261500 (this is really quite high!)
+p-value < 0.01
+
+
+### Second Predictor
+
+The next strongest correlation for the numeric variables was sqft_above but this is really very similar to sqft_living so lets not do it next. Bedrooms has a moderate correlation with price so try that next. 
+
+```{r}
+model2 <- lm(price ~ sqft_living + bedrooms, 
+             data = houses_tidy)
+
+summary(model2)
+```
+R2 = 0.507 so not added much from model 1 (R2 = 0.493)
+rse = 257800 still very high 
+
+```{r}
+autoplot(model2)
+```
+```{r}
+plot(model2)
+
+houses %>% 
+  slice(15871)
+```
+
+
+
+We seem to be fiting a negative values - what is going on here?
+
+```{r}
+houses %>% 
+  ggplot(aes(price, bedrooms)) + 
+  geom_point()
+```
+
+So there is a house with over 30 bedrooms. This was investigated. This house is noted as having 33 bedrooms but costing $640000. All the other houses that cost this much (there were 21) had between 2 and 6 bedrooms, this is therefore assumed to be a typo and the number of bedrooms changed to 3. 
+
+```{r}
+houses_tidy <- houses_tidy %>% 
+  mutate(bedrooms = ifelse(bedrooms > 30, 3, bedrooms)) 
+```
+
+Run model and diagnostic again...
+
+```{r}
+model2b <- lm(price ~ sqft_living + bedrooms, 
+              data = houses_tidy)
+
+summary(model2b)
+```
+
+The R2 and rse are similar to model2 but the diagnostics should look better. 
+
+```{r}
+autoplot(model2b)
+```
+
+Hmmm, for plot 2 the residuals are getting larger as the prices get higher. 
+For scale-location, the blue line is not flat and I think it should be. Am starting to have my doubts about using sqft_livng, there is something not right with this data. 
+
+Does sqft_above look any better?
+
+```{r}
+houses_tidy %>% 
+  
+```
+

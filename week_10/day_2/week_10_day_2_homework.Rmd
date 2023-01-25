@@ -91,8 +91,6 @@ median_income
 ```{r}
 ggplot(houses, aes(median_income, median_house_value)) +
   geom_point(alpha = 0.1)
-
-
 ```
 
 latitude
@@ -377,6 +375,17 @@ summary(model_4)
 Wow this is not significant at all - interesting. You would really think that the number of rooms in a house would affect the price but I suppose it maybe doesn't account for really expensive 1 bed flats in the city?
 
 
+```{r}
+houses %>%
+  ggplot(aes(x = log(median_income),
+             y = log(median_house_value), 
+             colour = ocean_proximity)) +
+  geom_point(alpha = 0.1) +
+  geom_smooth(method = "lm", se = FALSE) 
+#  facet_wrap(~ ocean_proximity)
+
+
+```
 
 
 
