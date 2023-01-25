@@ -44,6 +44,13 @@ There are 10 variables, 9 are numeric and at a first glance appear to be continu
 
 total_bedrooms is missing 200 observations, none of the other columns contain missing data. 
 
+```{r}
+alias(lm(median_house_value ~ ., data = houses))
+```
+
+There are no variables listed in a table so this implies there are no columns which can be made from other columns. 
+
+
 ## 1.2 
 
 ```{r}
@@ -76,7 +83,7 @@ Significant correlations with median_house_value
 median_income; cor = 0.643
 
 Possible correlations:
-latitude; cor = -0.148 (could indicate closer to sea)
+latitude; cor = -0.148 (could indicate closer to sea?)
 total_rooms; cor = 0.143
 ocean_proximity; boxplot indicates one category has higher prices and one category has lower prices
 
@@ -298,6 +305,18 @@ autoplot(model_interactions)
 
 I can' see any different in these plots compared to any of the others I've run??
 
+```{r}
+coplot(median_house_value ~ median_income|ocean_proximity_inland,
+       rows = 1, 
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "red")
+       },
+       data = houses_dummy)
+```
+
+
+
 ## Perhaps the question meant to run this interation on its own?? But it does say adding. 
 Try it on its own anyway...
 
@@ -356,4 +375,10 @@ summary(model_4)
 ```
 
 Wow this is not significant at all - interesting. You would really think that the number of rooms in a house would affect the price but I suppose it maybe doesn't account for really expensive 1 bed flats in the city?
+
+
+
+
+
+
 
