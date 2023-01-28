@@ -1,0 +1,120 @@
+---
+title: "Week 10 Day 5 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(modelr)
+```
+Lets focus on the white wine dataset first as it will be difficult to deal with both at the same time. 
+
+
+```{r}
+white_red <- read_csv("raw_data/wine-quality-white-and-red.csv") %>% 
+  janitor::clean_names()
+```
+
+```{r}
+skimr::skim(white_red)
+
+glimpse(white_red)
+```
+
+The datasets consist of 1 character column (region) and 12 numeric columns. 
+There are no missing values
+
+
+
+### Are there any aliases?
+```{r}
+alias(lm(quality ~ ., data = white_red))
+```
+
+### What does quality data look like?
+
+```{r}
+white_red %>% 
+  ggplot(aes(quality)) +
+  geom_density()
+
+white %>% 
+  ggplot(aes(quality)) +
+  geom_histogram(binwidth = 0.05)
+```
+
+Quite a few lumps and bumps - I think this means it is multi-modal. However, if you screw up your eyes then it is kind of normally distributed.
+
+With the binwidth set to 0.05 on the histogram you can see clusters of ratings around 5, 6 and 7. Then at much lower levels around 4 and 8.
+
+
+Run a correlation matrix
+```{r}
+ggcorr(white_red,
+               label = TRUE,
+               label_round = 2,
+               label_size = 3,
+               layout.exp = 0.5, 
+               hjust = 0.8,
+               size = 3) 
+```
+**need to rewrite all this**
+Not many strong correlations going on. 
+Very strong positive correlation - density and residual sugar
+Weak positive correlation - the SO2 variables
+                          - density and chlorides
+                          - density and total SO2
+                          
+We are most interested in correlations with quality:
+Weak negative correlation with density and chlorides.
+Very weak negative correlation with volatile acidity.
+
+Lets run a boxplot of region to see what it is doing.
+
+
+```{r, message = FALSE}
+
+ggpairs(white_red, progress = FALSE)
+
+```
+
+
+
+```{r}
+mod1 <- lm(quality ~ alcohol, data = white_red)
+
+summary(mod1)
+```
+
+```{r}
+autoplot(mod1)
+```
+
+
+
+
+```{r, message = FALSE}
+white_red %>% 
+  add_residuals(mod1) %>% 
+  select(-alcohol, -quality) %>% 
+  ggpairs(progress = FALSE)
+```
+
+```{r}
+mod2 <- lm(quality ~ alcohol + volatile_acidity, data = white_red)
+
+summary(mod2)
+```
+
+```{r}
+autoplot(mod2)
+```
+

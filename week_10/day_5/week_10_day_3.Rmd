@@ -1,0 +1,154 @@
+---
+title: "Week 10 Day 5 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+
+```{r}
+library(tidyverse)
+
+```
+Lets focus on the white wine dataset first as it will be difficult to deal with both at the same time. 
+
+
+```{r}
+white <- read_csv("raw_data/wine_quality_white.csv")
+
+red <- read_csv("raw_data/wine_quality_red.csv")
+
+white_red <- read_csv("raw_data/wine-quality-white-and-red.csv") %>% 
+  janitor::clean_names()
+```
+
+
+```{r}
+white_trim <- white %>% 
+  select(quality, volatile_acidity, citric_acid, residual_sugar, chlorides,
+         density, p_h, alcohol)
+
+white_red$volatile_acidity <- round(white_red$volatile_acidity, 3)
+white_trim$volatile_acidity <- round(white_trim$volatile_acidity, 3)
+white_red$citric_acid <- round(white_red$citric_acid, 2)
+white_trim$citric_acid <- round(white_trim$citric_acid, 2)
+white_red$residual_sugar <- round(white_red$residual_sugar, 2)
+white_trim$residual_sugar <- round(white_trim$residual_sugar, 2)
+
+
+quality_join <- left_join(white_red, white_trim, by = c(
+  "volatile_acidity" = "volatile_acidity", 
+  "citric_acid" = "citric_acid", 
+  "residual_sugar" = "residual_sugar",
+  "chlorides" = "chlorides",
+  "density" = "density",
+  "p_h" = "p_h",
+  "alcohol" = "alcohol"))
+
+
+colnames(white_trim)
+
+glimpse(white_trim)
+glimpse(white_red)
+
+```
+
+
+```{r}
+white %>% 
+  distinct(density)
+```
+
+
+
+
+
+
+```{r}
+skimr::skim(white)
+skimr::skim(red)
+```
+
+The datasets consist of 1 character column (region) and 13 nummeric columns. 
+The red dataset contains 2 missing values for total_sulfur_dioxide.
+The wine id is essentially a row number so should be removed from both datasets.
+
+
+```{r}
+white <- white %>% 
+  select(-wine_id)
+```
+
+### Are there any aliases?
+```{r}
+alias(lm(quality ~ ., data = white))
+```
+
+### What does quality data look like?
+
+```{r}
+white %>% 
+  ggplot(aes(quality)) +
+  geom_density()
+
+white %>% 
+  ggplot(aes(quality)) +
+  geom_histogram(binwidth = 0.05)
+```
+
+Quite a few lumps and bumps - I think this means it is multi-modal. However, if you screw up your eyes then it is kind of normally distributed.
+
+With the binwidth set to 0.05 on the histogram you can see clusters of ratings around 5, 6 and 7. Then at much lower levels around 4 and 8.
+
+
+Run a correlation matrix
+```{r}
+no_region <- white %>% 
+  select(-region) 
+
+  
+  GGally::ggcorr(no_region,
+               label = TRUE,
+               label_round = 2,
+               label_size = 3,
+               layout.exp = 0.5, 
+               hjust = 0.8,
+               size = 3) 
+```
+
+Not many strong correlations going on. 
+Very strong positive correlation - density and residual sugar
+Weak positive correlation - the SO2 variables
+                          - density and chlorides
+                          - density and total SO2
+                          
+We are most interested in correlations with quality:
+Weak negative correlation with density and chlorides.
+Very weak negative correlation with volatile acidity.
+
+Lets run a boxplot of region to see what it is doing.
+
+```{r}
+white %>% 
+  ggplot(aes(region, quality)) +
+  geom_boxplot()
+```
+
+Hmmm, not much variation there. 
+
+Just noticed the pH and alcohol values are ridiculous. The decimal point has gone missing. This is going to take some sorting out!
+
+```{r}
+white %>% 
+  ggplot(aes(alcohol)) +
+  geom_histogram()
+```
+
+
+
+
+

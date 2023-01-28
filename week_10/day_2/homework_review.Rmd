@@ -16,6 +16,7 @@ library(ggfortify)
 library(fastDummies)
 library(mosaic)
 library(leaflet)
+library(modelr)
 ```
 
 
@@ -187,3 +188,63 @@ Two new ideas:
   how do you know which?
   ANOVA test
   check in the model with is signficant.......?????
+  
+  
+# Interactions
+
+```{r}
+model3 <- lm(median_house_value ~ median_income + ocean_prox_jamie + 
+               bedrooms_per_house, 
+             data = house_augment)
+
+summary(model3)
+```
+
+Maybe we have a theory that the influence of income is different for the different ocean proximity groups - lets visualise it. 
+
+```{r}
+house_resid <- house_augment %>% 
+  add_residuals(model3)
+```
+
+```{r}
+house_resid %>% 
+  ggplot(aes(x = median_income, y = resid, colour = ocean_prox_jamie)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+For near water the residuals fitted line is along zero and therefore we are estimating the same amount of time above and below the line.
+
+For inland we are over-estimating at higher incomes (y(actual) - y(estimated)) therefore this may benefit from an interaction. 
+
+For island (lets assume its not such a small sample for this teaching point) we are under-estimating for lower incomes and over estimating for higher incomes. We need our fitted line to go up at the LHS and down at the RHS.
+
+
+coplot is used to look at 2 continuous variables
+```{r}
+coplot(resid ~ bedrooms_per_house|median_income, 
+       overlap = FALSE,
+       panel = function(x, y, ...){
+         points(x,y)
+         abline(lm(y~x), col = "blue")
+       },
+       columns = 6,
+        data = house_resid)
+
+
+```
+
+```{r}
+model4 <- lm(median_house_value ~ median_income + ocean_prox_jamie + 
+               bedrooms_per_house + median_income:ocean_prox_jamie, 
+             data = house_augment)
+
+summary(model4)
+```
+
+```{r}
+anova(model3, model4)
+```
+
+The anova test shows that the median_income:ocean_prox_jamie interaction is significant. 

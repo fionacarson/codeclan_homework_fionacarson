@@ -1,0 +1,62 @@
+---
+title: "Week 10 Day 5 Homework Quiz"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+## 1. 
+**Question**  
+I want to predict how well 6 year-olds are going to do in their final school exams. Using the following variables am I likely under-fitting, fitting well or over-fitting? Postcode, gender, reading level, score in maths test, date of birth, family income.
+
+**Answer**  
+I can see all these variables affecting an exam score but there are 6 variables which seems like a lot. You could argue that postcode and family income are less relevant but they could definitely affect an exam score. 
+
+## 2.
+**Question**  
+If I have two models, one with an AIC score of 34,902 and the other with an AIC score of 33,559 which model should I use?
+
+**Answer**  
+The model with an AIC score of 33,559 should be used as the lower AIC score indicates it is a better model than the one with AIC = 34,902. 
+
+## 3.
+**Question**  
+I have two models, the first with: r-squared: 0.44, adjusted r-squared: 0.43. The second with: r-squared: 0.47, adjusted r-squared: 0.41. Which one should I use?
+
+**Answer**  
+The first model should be used. The first model has a lower r2 than the second model, however r2 can increase just by adding new predictors to the model (even if they don’t improve the model). 
+The reason the first model should be used is because it has a higher adjusted r2. Adjusted r2 takes account of the number of predictors and so is less likely to lead to overfitting. 
+
+## 4.
+**Question**  
+I have a model with the following errors: RMSE error on test set: 10.3, RMSE error on training data: 10.4. Do you think this model is over-fitting?
+
+**Answer**  
+No, if the model was overfitting then I would expect the rmse to be higher in the test set. If the model created on the training set was overfitted then it would fit the training data very well but would fit other data e.g. the test set less well. 
+
+## 5.
+**Question**  
+How does k-fold validation work?
+
+**Answer**  
+For building models on a dataset you can split the dataset into two parts. One subset on which you build your model (called training set) and the other on which you test you model (test set). However, this isn’t ideal if you have outliers or other features in your data which may end up in one set or the other and skew the model or test results. To get round this k-fold validation splits the data into k subsets and each of these subsets gets a turn at being the test set while the remaining subsets are used to train the model. This way we end up with k sets of predictions and statistics. The stats such as the rmse and r2 can be averaged and then model assessed against other models. 
+
+## 6.
+**Question**  
+What is a validation set? When do you need one?
+
+**Answer**  
+A validation set is used to give a final estimate of the expected performance of the model. It should only be used once you have selected your final model. 
+Validation sets are used to prevent overfitting to the test set which is common when fitting models that have hyperparameters. This is an issue for techniques such as clustering or decision trees. 
+
+
+## 7.
+**Question**  
+Describe how backwards selection works.
+
+## 8.
+**Question**  
+Describe how best subset selection works.
