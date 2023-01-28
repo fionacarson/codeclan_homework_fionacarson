@@ -1,0 +1,78 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(modelr)
+```
+
+```{r}
+songs <- read_csv("raw_data/song_data.csv")
+
+songs <- songs %>% 
+  rename(name = song_name,
+         popularity = song_popularity,
+          duration = song_duration_ms)
+```
+
+```{r}
+skimr::skim(songs)
+```
+
+```{r}
+ggplot(songs, aes(popularity)) +
+  geom_histogram(binwidth = 1)
+```
+
+Which songs have a popularity of zero?
+
+```{r}
+songs %>%
+  filter(popularity < 1)
+  
+```
+
+```{r, message = FALSE}
+songs %>% 
+  select(-name) %>% 
+ggpairs(progress = FALSE)
+```
+
+Instrumentalness has the best correlation with popularity but it is a weak negative correlation at -0.131.
+The next best after that is danceability at 0.104, closely followed by loudness at 0.099
+
+```{r}
+mod1 <- lm(popularity ~ instrumentalness, data = songs)
+
+summary(mod1)
+```
+
+Wow, R2 is 0.017 which is pretty low for a first variable. 
+
+```{r}
+autoplot(mod1)
+```
+
+Diagnostics aren't great but nothing obviously wrong. 
+
+```{r}
+ggplot(songs, aes(popularity, instrumentalness)) +
+  geom_point()
+```
+
+```{r, message = FALSE}
+songs %>% 
+  add_residuals(mod1) %>% 
+  select(-popularity, -instrumentalness, -name) %>% 
+  ggpairs(progress = FALSE)
+```
+
+```{r}
+mod2 <- lm(popularity ~ instrumentalness + danceability, data = songs)
+
+summary(mod2)
+```
+

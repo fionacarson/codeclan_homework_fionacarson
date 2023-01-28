@@ -57,6 +57,12 @@ Validation sets are used to prevent overfitting to the test set which is common 
 **Question**  
 Describe how backwards selection works.
 
+**Answer**  
+Start with a model containing all possible predictors and at each step find the one that lowers the r2 the least when it is removed. Remove this predictor from the model and then repeat. 
+
 ## 8.
 **Question**  
 Describe how best subset selection works.
+
+**Answer**  
+All possible combinations and number of predictors are added to the model and the "best" model chosen. This is dangerous and can lead to the "best" model being a coincidence. 

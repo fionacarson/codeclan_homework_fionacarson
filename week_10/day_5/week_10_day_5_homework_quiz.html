@@ -2816,11 +2816,19 @@ trees.</p>
 <h2>7.</h2>
 <p><strong>Question</strong><br />
 Describe how backwards selection works.</p>
+<p><strong>Answer</strong><br />
+Start with a model containing all possible predictors and at each step
+find the one that lowers the r2 the least when it is removed. Remove
+this predictor from the model and then repeat.</p>
 </div>
 <div id="section-7" class="section level2">
 <h2>8.</h2>
 <p><strong>Question</strong><br />
 Describe how best subset selection works.</p>
+<p><strong>Answer</strong><br />
+All possible combinations and number of predictors are added to the
+model and the “best” model chosen. This is dangerous and can lead to the
+“best” model being a coincidence.</p>
 </div>
 
 

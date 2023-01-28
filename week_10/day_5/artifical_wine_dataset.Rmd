@@ -1,0 +1,545 @@
+---
+title: "Week 10 Day 5 Homework - Take 3"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+This analysis was run on a dataset created from the wine data downloaded from Kaggle combined with the quality (which is to 2 decimal places) and region data provided by CodeClan. See cleaning script. 
+Only the white wine datasets combined correctly, the red one had issues so was not used. 
+quality - the original integer data
+quality2 - the data to two decimal places
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggfortify)
+library(modelr)
+#library(relaimpo). don't load as masks select function
+library(glmulti)
+library(caret)
+```
+
+```{r}
+white <- read_csv("clean_data/white.csv") %>% 
+  janitor::clean_names()
+```
+
+Lets split into a test, train set
+
+
+```{r}
+n_data <- nrow(white)
+
+test_index <- sample(1:n_data, size = n_data*0.2)
+
+test  <- slice(white, test_index)
+train <- slice(white, -test_index)
+
+rm(n_data, test_index)
+```
+
+
+
+```{r}
+skimr::skim(white)
+
+glimpse(white)
+```
+
+What does quality data look like?
+
+```{r}
+white %>% 
+  ggplot(aes(quality2)) +
+  geom_density()
+
+white %>% 
+  ggplot(aes(quality2)) +
+  geom_histogram(binwidth = 0.05)
+```
+
+Quite a few lumps and bumps - I think this means it is multi-modal. However, if you screw up your eyes then it is kind of normally distributed.
+
+With the binwidth set to 0.05 on the histogram you can see clusters of ratings around 5, 6 and 7. Then at much lower levels around 4 and 8.
+
+
+Run a correlation matrix
+```{r}
+ggcorr(train,
+               label = TRUE,
+               label_round = 2,
+               label_size = 3,
+               layout.exp = 0.5, 
+               hjust = 0.8,
+               size = 3) 
+```
+
+moderate positive correlation with alcohol 
+weak negative with density (but alcohol and density have strong correlation so density might not be good 2nd predictor)
+weak negative with chlorides
+very negative with volatile acidity, total SO2, fixed acidity
+
+```{r}
+mod1 <- lm(quality2 ~ alcohol, data = train)
+
+summary(mod1)
+```
+
+```{r}
+#autoplot(mod1)
+```
+
+Diagnostic plots look really good!
+
+```{r}
+train_resid <- train %>% 
+  add_residuals(mod1) %>% 
+  select(-alcohol, -quality, -quality2)
+```
+
+```{r, message = FALSE}
+#ggpairs(train_resid, progress = FALSE)
+```
+
+Volatile acid has the highest correlation with the residuals at -0.23. Lets add that next.
+
+```{r}
+mod2 <- lm(quality2 ~ alcohol + volatile_acidity, train)
+
+summary(mod2)
+```
+
+Wow, up to a massive r2 = 22%
+Adding volatile acidity is significant - lets check diagnostic plots
+
+```{r}
+#autoplot(mod2)
+```
+
+diagnostics look good!
+
+```{r}
+train_resid <- train %>% 
+  add_residuals(mod2) %>% 
+  select(-alcohol, -quality, -quality2, -volatile_acidity)
+```
+
+```{r, message = FALSE}
+#ggpairs(train_resid, progress = FALSE)
+```
+
+
+
+
+
+
+Residual sugar has a postive correlation of 0.121. Lets add this as 3rd predictor. 
+
+```{r}
+mod3 <- lm(quality2 ~ alcohol + volatile_acidity + residual_sugar, train)
+
+summary(mod3)
+```
+
+```{r}
+#autoplot(mod3)
+```
+
+```{r}
+anova(mod3, mod2)
+```
+
+We're not improving the r2 much but the significance of adding residual sugars is good. 
+
+
+```{r}
+train_resid <- train %>% 
+  add_residuals(mod3) %>% 
+  select(-alcohol, -quality, -quality2, -volatile_acidity, -residual_sugar)
+```
+
+```{r, message = FALSE}
+#ggpairs(train_resid, progress = FALSE)
+```
+
+Free SO2 has a correlation of 0.078 with residuals. I initially hesitated to add this as I didn't feel quality and SO2 should have a positive correlation but this correlation is with the residuals so lets add it. 
+
+
+```{r}
+mod4 <- lm(quality2 ~ alcohol + volatile_acidity + residual_sugar + 
+             free_sulfur_dioxide, train)
+
+summary(mod4)
+```
+
+```{r}
+anova(mod3, mod4)
+```
+
+
+```{r}
+train_resid <- train %>% 
+  add_residuals(mod4) %>% 
+  select(-alcohol, -quality, -quality2, -volatile_acidity, -residual_sugar,
+         -free_sulfur_dioxide)
+```
+
+```{r, message = FALSE}
+#ggpairs(train_resid, progress = FALSE)
+```
+
+fixed acidity has a negative correlation of -0.067 and sulphates has a positive correlation of 0.067. Lets add acidity because we already have an so2 predictor. 
+
+```{r}
+mod5 <- lm(quality2 ~ alcohol + volatile_acidity + residual_sugar + 
+             free_sulfur_dioxide + fixed_acidity, train)
+
+summary(mod5)
+```
+
+p-value is getting larger but still well below 0.01.
+
+```{r}
+AIC(mod3, mod4, mod5)
+```
+
+```{r}
+BIC(mod3, mod4, mod5)
+```
+
+BIC is still reducing so maybe we should continue??
+
+```{r}
+train_resid <- train %>% 
+  add_residuals(mod5) %>% 
+  select(-alcohol, -quality, -quality2, -volatile_acidity, -residual_sugar,
+         -free_sulfur_dioxide, -fixed_acidity)
+```
+
+```{r, message = FALSE}
+#ggpairs(train_resid, progress = FALSE)
+```
+
+Sulphates have correlation of 0.066 so lets add that. 
+
+```{r}
+mod6 <- lm(quality2 ~ alcohol + volatile_acidity + residual_sugar + 
+             free_sulfur_dioxide + fixed_acidity + sulphates, train)
+
+summary(mod6)
+```
+
+```{r}
+AIC(mod5, mod6)
+```
+
+
+```{r}
+BIC(mod5, mod6)
+```
+
+We now have 6 predictors - this feels like enough but lets check one last time nothing has popped up in the residuals.
+
+
+```{r}
+train_resid <- train %>% 
+  add_residuals(mod6) %>% 
+  select(-alcohol, -quality, -quality2, -volatile_acidity, -residual_sugar,
+         -free_sulfur_dioxide, -fixed_acidity, -sulphates)
+```
+
+```{r, message = FALSE}
+#ggpairs(train_resid, progress = FALSE)
+```
+
+The highest correlation now is pH at 0.024, so lets stop here. 
+
+
+Haven't been checking diagnostics!
+
+```{r}
+#autoplot(mod6)
+```
+
+```{r}
+#plot(mod6)
+```
+
+One point with a lot of leverage but its not over cooks distance so we don't need to worry about it. 
+Rest of diagnostics look fine. 
+
+```{r}
+train %>% 
+  ggplot(aes(quality2, sulphates, colour = residual_sugar)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+  
+```
+
+
+```{r}
+coplot(quality2 ~ residual_sugar | sulphates,
+       overlap = FALSE,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = train, rows = 1)
+```
+
+
+```{r}
+train %>%
+  ggplot(aes(x = quality2, y = alcohol, colour = region)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+Using coplot the residual_sugar | sulphates interaction looks like it might be worth adding.
+
+
+
+
+
+```{r}
+mod7 <- lm(quality2 ~ alcohol + volatile_acidity + residual_sugar + 
+             free_sulfur_dioxide + fixed_acidity + sulphates +
+             residual_sugar : volatile_acidity, train)
+
+summary(mod7)
+```
+
+```{r}
+anova(mod6, mod7)
+```
+
+Hmmm the signficance level is 0.01 so we are really approaching the point where what we've added hasn't made much difference. 
+
+Changed interaction to residual_sugar:alcohol and it improved model almost exactly the same amount but the p-value is lower. 
+
+Using residual_sugar : volatile acid is better again so lets go with this. 
+
+Our final model is:
+
+quality2 ~ alcohol + volatile_acidity + residual_sugar + free_sulfur_dioxide + 
+    fixed_acidity + sulphates + residual_sugar:volatile_acidity
+  
+  
+## Apply Model to Test Data 
+    
+```{r}
+prediction <- predict(mod7, test)
+
+output <- cbind(test, prediction)
+
+output %>% 
+  ggplot(aes(quality2, prediction)) +
+  geom_point() +
+  geom_abline(intercept = 0, slope = 1, colour = "red")
+
+```
+ 
+ 
+```{r}
+relaimpo::calc.relimp(mod7, type = "lmg", rela = TRUE)
+```
+ 
+## Calculating mse
+
+```{r}
+predictions_test <- test %>%
+  add_predictions(mod7) %>%
+  select(quality2, pred)
+
+mse_test <- mean((predictions_test$pred - test$quality2)**2)
+mse_test
+```
+
+```{r}
+predictions_train <- train %>%
+  add_predictions(mod7) %>%
+  select(quality2, pred)
+
+mse_train <- mean((predictions_train$pred - train$quality2)**2)
+mse_train
+```
+
+What do these numbers mean? results are plus or minus 0.6??
+
+## glmulti
+
+```{r}
+# remove quality and region variables before fitting glmulti
+white_trim <- white %>% 
+  select(-quality, -region)
+
+train_index <- createDataPartition(white_trim$quality2, p = 0.8, list = FALSE, times = 1)
+
+train_automated <- white_trim[train_index, ]
+test_automated <- white_trim[-train_index,]
+```
+
+
+
+```{r}
+glmulti_fit <- glmulti(
+  quality2 ~ ., # model to fit, in this case, charges varies with everything
+  level = 2, # level = 2 means try pairwise interactions. level = 1 means main effects only
+  data = train_automated, # data to use for fitting
+  minsize = 0, # min size of model to try, in number of predictors
+  maxsize = -1, # max size to try, set to -1 for unlimited
+  marginality = TRUE, # marginality true means include pairwise interaction only if both main effects present in model.  
+  method = "d", # method "d" means trial run, to get size of problem. Set to "h" for exhaustive search, or "g" for genetic algorithm
+  confsetsize = 1000, # how many models should glmulti() return? Must be less than total size of problem
+  plotty = FALSE, # provide progress plots? Generally annoying.
+  report = TRUE, # provide progress reports? Generally useful.
+  fitfunction = lm, # use lm() as fit function. Can also use glm() for logistic regression.
+  crit = aic # criterion for selecting best models. 
+)
+```
+
+The code below kept freezing R Studio (or I wasn't leaving it for long enough). So levels changed to 1
+
+
+```{r}
+glmulti_fit <- glmulti(
+  quality2 ~ ., # model to fit, in this case, charges varies with everything
+  level = 1, # level = 2 means try pairwise interactions. level = 1 means main effects only
+  data = train_automated, # data to use for fitting
+  minsize = 0, # min size of model to try, in number of predictors
+  maxsize = 10, # max size to try, set to -1 for unlimited
+  marginality = TRUE, # marginality true means include pairwise interaction only if both main effects present in model.  
+  method = "d", # method "d" means trial run, to get size of problem. Set to "h" for exhaustive search, or "g" for genetic algorithm
+  confsetsize = 100, # how many models should glmulti() return? Must be less than total size of problem
+  plotty = FALSE, # provide progress plots? Generally annoying.
+  report = TRUE, # provide progress reports? Generally useful.
+  fitfunction = lm, # use lm() as fit function. Can also use glm() for logistic regression.
+  crit = aic # criterion for selecting best models. 
+)
+```
+
+```{r}
+glmulti_fit <- glmulti(
+  quality2 ~ .,
+  level = 1,
+  data = train_automated,
+  minsize = 0,
+  maxsize = 10,
+  marginality = TRUE,
+  method = "h",
+  confsetsize = 1000,
+  plotty = FALSE,
+  report = TRUE,
+  fitfunction = lm,
+  crit = aic
+)
+```
+
+```{r}
+rmse_results <- numeric(1000)
+for (i in 1:1000){
+  this_model <- glmulti_fit@objects[[i]]
+  predictions <- predict(this_model, newdata = test)
+  rmse_results[i] <- sqrt(mean((predictions - test$quality2)^2))
+}
+plot(rmse_results)
+```
+
+Fooling glmulti into using r2
+
+```{r}
+neg_r2 <- function(model){
+  sum_model <- summary(model)
+  return( -1 * sum_model$r.squared)
+}
+```
+ 
+```{r}
+# save each glmulti_fit object to a list as we go
+best_fits <- list()
+
+# search out to models with 10 predictors
+num_pred_max <- 10
+
+for (num_pred in 1:num_pred_max){
+  # track progress
+  print(paste("num_pred =", num_pred))
+  
+  # run the search for models of num_pred size
+  glmulti_fit <- glmulti(
+    quality2 ~ .,
+    level = 1,
+    data = train_automated,
+    minsize = num_pred, # only models of num_pred size
+    maxsize = num_pred, # only models of num_pred size
+    marginality = TRUE,
+    method = "h",
+    confsetsize = 1, # save only best model from this search
+    plotty = FALSE,
+    report = FALSE,
+    fitfunction = lm,
+    crit = neg_r2 # our custom crit function
+  )
+  
+  best_fits <- append(best_fits, glmulti_fit)
+}
+```
+ 
+```{r}
+rmse_results <- numeric(num_pred_max)
+for (i in 1:num_pred_max){
+  this_model <- best_fits[[i]]@objects[[1]]
+  predictions <- predict(this_model, newdata = test)
+  rmse_results[i] <- sqrt(mean((predictions - test_automated$quality2)^2))
+}
+plot(rmse_results)
+```
+ 
+```{r}
+glmulti_fit
+```
+ 
+```{r}
+glmulti_fit@objects[[1]]
+```
+ 
+```{r}
+glmulti_fit$formula
+```
+ 
+```{r}
+best_mod <- glmulti_fit@objects[[1]]
+
+best_mod$terms
+
+```
+ 
+```{r}
+anova(mod7, best_mod)
+```
+
+struggled to extract best model from glmulti_fit output so created it manually 
+```{r}
+glmulti_model <- lm(quality2 ~ fixed_acidity + volatile_acidity + residual_sugar + 
+    chlorides + free_sulfur_dioxide + total_sulfur_dioxide + 
+    density + p_h + sulphates + alcohol, train_automated)
+
+
+AIC(glmulti_model, mod7)
+
+summary(glmulti_model)
+```
+ 
+ The below code wouldn't run with region in the model so region was removed. 
+ 
+```{r}
+relaimpo::calc.relimp(glmulti_model, type = "lmg", rela = TRUE)
+```
+ 
+ 
