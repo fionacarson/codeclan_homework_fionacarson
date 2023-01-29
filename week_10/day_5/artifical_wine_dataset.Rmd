@@ -510,7 +510,8 @@ glmulti_fit@objects[[1]]
 ```
  
 ```{r}
-glmulti_fit$formula
+#glmulti_model$formula
+#glmulti_model$formula
 ```
  
 ```{r}
@@ -542,4 +543,51 @@ summary(glmulti_model)
 relaimpo::calc.relimp(glmulti_model, type = "lmg", rela = TRUE)
 ```
  
+ ## Compare results
  
+We have 2 models:
+
+1. Manual model - mod7
+2. glmulti model - glmulti_model
+
+For the manual model we also have test and train dataset which will each have real and predicted values. 
+
+mod7 - train
+
+```{r}
+train_pred <- train %>% 
+  add_predictions(mod7)
+
+ggplot(train_pred, aes(quality2)) +
+  geom_density() +
+  geom_density(aes(pred), colour = "red")
+
+
+ggplot(train_pred, aes(quality2, pred)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, colour = "blue")
+```
+
+```{r}
+glmulti_pred <- train_automated %>% 
+  add_predictions(glmulti_model)
+
+ggplot(glmulti_pred, aes(quality2)) +
+  geom_density() +
+  geom_density(aes(pred), colour = "red")
+
+
+ggplot(glmulti_pred, aes(quality2, pred)) +
+  geom_point() +
+  geom_abline(a = 1, b = 0, colour = "blue")
+```
+
+# All 3 sets of results
+
+```{r}
+ggplot() +
+  geom_density(glmulti_pred, aes(x = quality2)) +
+  geom_density(glmulti_pred, aes(pred), colour = "red") +
+  geom_density(train_pred, aes(pred), colour = "blue")
+```
+
