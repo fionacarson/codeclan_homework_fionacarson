@@ -14,7 +14,7 @@ Only the white wine datasets combined correctly, the red one had issues so was n
 quality - the original integer data
 quality2 - the data to two decimal places
 
-```{r}
+```{r setup}
 library(tidyverse)
 library(GGally)
 library(ggfortify)
@@ -522,7 +522,7 @@ best_mod$terms
 ```
  
 ```{r}
-anova(mod7, best_mod)
+#anova(mod7, best_mod)
 ```
 
 struggled to extract best model from glmulti_fit output so created it manually 
