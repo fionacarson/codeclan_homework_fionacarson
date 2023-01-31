@@ -1,0 +1,274 @@
+---
+title: "Week 11 Day 2 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(rpart)
+library(rpart.plot)
+library(tidyverse)
+library(janitor)
+library(tidyverse)
+
+titanic_set <- read_csv('data/titanic_decision_tree_data.csv')
+
+shuffle_index <- sample(1:nrow(titanic_set))
+
+# shuffle the data so class order isn't in order - need this for training/testing split later on 
+# this isn't changing anything in the data its just changing order of rows
+titanic_set <- titanic_set[shuffle_index, ]
+```
+
+
+# 1 MVP
+## 1.1 Question 1
+
+```{r}
+titanic_clean <- titanic_set %>%
+  filter(survived %in% c(0,1)) %>%
+# Convert to factor level
+    mutate(sex = as.factor(sex), 
+           age_status = as.factor(if_else(age <= 16, "child", "adult")),
+         class = factor(pclass, levels = c(3,2,1), labels = c("Lower", "Middle", "Upper")), 
+           survived_flag = factor(survived, levels = c(0,1), labels = c("No", "Yes")), 
+           port_embarkation = as.factor(embarked)) %>%
+  select(sex, age_status, class, port_embarkation, sib_sp, parch, survived_flag) %>%
+  na.omit()
+
+```
+
+## 1.2 Question 2
+
+```{r}
+ggplot(titanic_clean, aes(survived_flag)) +
+  geom_bar()
+```
+
+
+
+
+```{r}
+ggplot(titanic_clean, aes(class, fill = survived_flag)) +
+  geom_bar(position = "fill")
+```
+
+This plot above tells us that the higher the class of passenger, the more likely they were to survive. Over 75% over lower class passengers died. Class will likely be an important variable. 
+
+```{r}
+ggplot(titanic_clean, aes(sex, fill = survived_flag)) +
+  geom_bar(position = "fill")
+```
+
+A much larger proportion of men died, compared to woman so sex is likely to be an important variable as well. 
+
+```{r}
+ggplot(titanic_clean, aes(age_status, fill = survived_flag)) +
+  geom_bar(position = "fill")
+
+
+```
+
+A higher proportion of children than adults survived but the difference in proportion isn't as high as for class and sex.
+
+```{r}
+ggplot(titanic_clean, aes(port_embarkation, fill = survived_flag)) +
+  geom_bar(position = "fill")
+```
+
+A much higher porportion of people survived if they embarked at Cherbourg. I wonder if this might be related to class though?
+
+```{r}
+ggplot(titanic_clean, aes(port_embarkation, fill = class)) +
+  geom_bar()
+
+ggplot(titanic_clean, aes(port_embarkation, fill = class)) +
+  geom_bar(position = "fill")
+```
+
+Cherbourg has the highest proportion of upper class passenger so it may be a proxy for class. Will have to watch out for that. 
+
+I would expect the sibsp and parch number to be related to the chance of survival. I think people in family groups would be more likely to survive than e.g. single men. 
+
+```{r}
+ggplot(titanic_clean, aes(parch, survived_flag)) +
+  geom_jitter(height = 0.2, alpha = 0.3)
+
+ggplot(titanic_clean, aes(sib_sp, survived_flag)) +
+  geom_jitter(height = 0.2, alpha = 0.3)
+```
+
+## 1.3 Question 3
+
+```{r}
+n_data <- nrow(titanic_clean)
+
+test_index <- sample(1:n_data, size = n_data * 0.2)
+
+titanic_test <- slice(titanic_clean, test_index)
+
+titanic_train <- slice(titanic_clean, -test_index)
+
+```
+
+
+Checking properties of both data sets
+```{r}
+titanic_train %>% 
+  tabyl(survived_flag)
+
+titanic_test %>% 
+  tabyl(survived_flag)
+
+```
+An 80:20 split was chosen as this is a decent sized dataset so 20% of observations in the test set will give us decent results. 80:20 is a commonly used split and I see no reason to choose anything else. 
+
+The train and test datasets are split quite evenly on survival so I am happy the train and test sets are balanced. 
+
+## 1.4 Question 4
+
+```{r}
+titanic_fit <- rpart(
+  formula = survived_flag ~ ., 
+  data = titanic_train, 
+  method = "class"
+)
+
+rpart.plot(titanic_fit,
+           yesno = 2, 
+           fallen.leaves = TRUE,
+           faclen = 6,
+           digits = 4,
+           type = 4, 
+           extra = 101)
+
+```
+
+## 1.5 Question 5
+
+The variables in order of importance according to the tree are:
+sex
+class
+sib_sp
+
+These are the most informative for predicting whether someone died or not on the titanic. 
+
+The most likely outcome is that 
+
+
+```{r}
+rpart.rules(titanic_fit, cover = TRUE)
+```
+
+```{r}
+library(modelr)
+
+titanic_test_pred <- titanic_test %>% 
+  add_predictions(titanic_fit, type = "class")
+
+
+```
+
+```{r}
+library(yardstick)
+
+conf_mat <- titanic_test_pred %>% 
+  conf_mat(truth = survived_flag, estimate = pred)
+```
+
+```{r}
+accuracy <- titanic_test_pred %>% 
+  accuracy(truth = survived_flag, estimate = pred)
+```
+
+  
+```{r}
+titanic_test_pred %>%
+  sensitivity(truth = survived_flag, estimate = pred)
+```
+  
+
+```{r}
+titanic_test_pred %>%
+  specificity(truth = survived_flag, estimate = pred)
+```
+
+Sensitivity is really good but specificity seems to be an issue. 
+Sensitivity is TPR 
+Specificity is TNR 
+
+
+```{r}
+library(caret)
+
+confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)
+```
+
+
+
+```{r}
+library(ranger)
+
+rf_classifier <- ranger(survived_flag ~ ., 
+                        data = titanic_train, 
+                        importance = "impurity", 
+                        num.trees = 1000, 
+                        mtry = 2, 
+                        min.node.size = 5)
+
+rf_classifier
+```
+
+```{r}
+importance(rf_classifier)
+```
+
+```{r}
+titanic_test_pred <- titanic_test %>% 
+  mutate(pred = predict(rf_classifier, data = titanic_test)$predictions)
+
+```
+
+```{r}
+confusionMatrix(titanic_test_pred$pred, titanic_test_pred$survived_flag)
+```
+
+## Method from homework notes
+
+```{r}
+library(ranger)
+
+control <- trainControl(
+  method = "repeatedcv", 
+  number = 5, 
+  repeats = 10
+)
+
+tune_grid = expand.grid(
+  mtry = 1:6,
+  splitrule = c("gini", "extratrees"),
+  min.node.size = c(1, 3, 5)
+)
+```
+
+```{r}
+rf_tune <- train(
+  survived_flag ~ ., 
+  data = titanic_train, 
+  method = "ranger",
+  metric = "Kappa",
+  num.trees = 1000,
+  importance = "impurity",
+  tuneGrid = tune_grid, 
+  trControl = control
+)
+
+plot(rf_tune)
+rf_tune
+```
+
