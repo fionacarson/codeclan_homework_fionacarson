@@ -1,0 +1,274 @@
+---
+title: "Week 11 Day 3 Homework"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(cluster)
+library(factoextra)
+library(dendextend)
+library(GGally)
+library(broom)
+```
+
+```{r}
+customers <- read_csv("data/mall_customers.csv") %>% 
+  janitor::clean_names() %>% 
+  rename(score = spending_score_1_100,
+         income = annual_income_k) 
+```
+## 1. Exploratory Analysis
+
+```{r}
+summary(customers)
+```
+No NAs
+Age has reasonable values (18 to 70)
+Income goes from 15 to 137k
+
+
+```{r}
+ggplot(customers, (aes(gender))) +
+  geom_bar() +
+  scale_y_continuous(n.breaks = 11)
+
+
+customers %>% 
+  filter(gender == "Female") %>% 
+  count()
+
+```
+
+
+
+```{r}
+ggplot(customers, aes(age, fill = gender)) +
+  geom_density(alpha = 0.5)
+
+```
+
+
+```{r}
+ggplot(customers, aes(income, score, colour = gender)) +
+  geom_point()
+```
+
+
+
+```{r}
+ggplot(customers, aes(score, age, colour = gender)) +
+  geom_point()
+```
+
+```{r}
+ggplot(customers, aes(income, age, colour = gender)) +
+  geom_point()
+```
+
+
+
+
+**Data Summary**
+- More females than males in the dataset (112 Female, 88 males)
+- The age spread is different for the genders. Larger number of females around 30 and late 40s early 50s years of age than males. More older males (> 55) than females. 
+- The scatter plot shows a very interesting pattern - looks like some obvious clusters!
+
+## 2. k-means clustering (meaningful clusters?)
+
+Scale data
+The data is all on a similar scale so I'm not sure if needs scaled but maybe k-means is really sensitive. Lets try it both ways - on scaled and unscaled data. 
+
+Will need to change gender column to numeric if we want to use it. 
+
+```{r}
+customers_clean <- customers %>% 
+  mutate(female = ifelse(gender == "Female", 1, 0)) %>% 
+  select(-gender)
+```
+
+
+
+
+```{r}
+customers_scaled <- customers_clean %>% 
+  mutate(across(c(age, income, score), scale))
+```
+
+
+```{r}
+diss_matrix <- customers_scaled %>% 
+  select(-customer_id) %>% 
+  dist(method = "euclidean")
+```
+
+Visualise distance matrix
+```{r}
+diss_matrix %>% 
+  fviz_dist()
+```
+
+Looks like there are clusters of data points there. 
+
+
+
+
+
+
+## 3. k-means clustering and choose k value
+
+```{r}
+fviz_nbclust(customers_scaled %>%  select(-customer_id),
+             FUNcluster = kmeans, 
+             method = "wss",
+             nstart = 20)
+
+fviz_nbclust(customers_scaled %>%  select(-customer_id),
+             FUNcluster = kmeans, 
+             method = "silhouette",
+             nstart = 20)
+
+fviz_nbclust(customers_scaled %>%  select(-customer_id),
+             FUNcluster = kmeans, 
+             method = "gap_stat",
+             nstart = 20)
+```
+
+elbow method = 4
+silhouette = 6 
+gap = 2 (but it increases a lot after this and 6 is the highest before it decreases)
+
+When we plotted income vs score there were 5 pretty distinct clusters so I would be inclined to go for at least 5 clusters. 
+**Lets choose 6 clusters**
+
+
+```{r}
+kmeans6_cust_scaled <- kmeans(customers_scaled %>% select(-customer_id), centers = 6, nstart = 20)
+
+kmeans6_cust_scaled
+```
+
+Nice spread of data points in each cluster
+
+
+## 4. visualise clusters
+
+```{r}
+kmeans6_tib <- kmeans6_cust_scaled$centers %>% 
+  as_tibble()
+```
+
+
+
+```{r}
+  ggplot() +
+  geom_point(data = augment(kmeans6_cust_scaled, customers_scaled), 
+             mapping = aes(income, score,  
+                           colour = .cluster)) +
+  geom_point(data = kmeans6_tib, 
+             mapping = aes(income, score), size = 5, alpha = 0.5) +
+  theme_minimal()
+
+
+  ggplot() +
+  geom_point(data = augment(kmeans6_cust_scaled, customers_scaled), 
+             mapping = aes(female, score,  
+                           colour = .cluster)) +
+  geom_point(data = kmeans6_tib, 
+             mapping = aes(female, score), size = 5, alpha = 0.5) +
+  theme_minimal()
+```
+
+It doesn't look as if gender has much influence on things as most of the clusters are sitting around 0.5. 
+The two clusters in the middle must be separated by age - lets take a look.
+
+```{r}
+  ggplot() +
+  geom_point(data = augment(kmeans6_cust_scaled, customers_scaled), 
+             mapping = aes(age, score,  
+                           colour = .cluster)) +
+  geom_point(data = kmeans6_tib, 
+             mapping = aes(age, score), size = 5, alpha = 0.5) +
+  theme_minimal()
+```
+
+Can see thqt clusters 1 adn 4 are separated well by age. 
+
+
+
+
+## 5. Good fit?
+
+
+## 6. Label clusters
+
+Try clusters on unscaled data to see if it needs scaled. 
+
+
+
+```{r}
+kmeans6_cust <- kmeans(customers_clean %>% select(-customer_id), centers = 6, nstart = 20)
+
+kmeans6_cust
+```
+
+```{r}
+kmeans6_tib_not_scaled <- kmeans6_cust$centers %>% 
+  as_tibble()
+```
+
+
+
+```{r}
+  ggplot() +
+  geom_point(data = augment(kmeans6_cust, customers_clean), 
+             mapping = aes(income, score,  
+                           colour = .cluster)) +
+  geom_point(data = kmeans6_tib_not_scaled, 
+             mapping = aes(income, score), size = 5, alpha = 0.5) +
+  theme_minimal() +
+  scale_x_continuous(n.breaks = 12)
+
+
+  ggplot() +
+  geom_point(data = augment(kmeans6_cust, customers_clean), 
+             mapping = aes(age, score,  
+                           colour = .cluster)) +
+  geom_point(data = kmeans6_tib_not_scaled, 
+             mapping = aes(age, score), size = 5, alpha = 0.5) +
+  theme_minimal()
+```
+
+So the data doesn't need to be scaled. This will make interpretation easier. 
+
+
+
+
+
+
+| Cluster | Age | Income | Score | Description |
+|---|---|---|---|---|
+| 1 | 33 | 87 | 82 | high-score (>60); 25-40 years old; > 70k
+| 2 | 44 | 25 | 20 | low-score (<40); all ages; < 40k
+| 3 | 42 | 88 | 17 | low-score (<40); all ages; > 70k
+| 4 | 25 | 26 | 79 | high-score (>60); < 25 years old; < 40k 
+| 5 | 56 | 53 | 49 | mid-score (40-60); > 40 years old; 40-70k
+| 6 | 27 | 57 | 49 | mid-score (40-60); <= 40 years old; 40-70 k
+
+
+K-means clustering with 6 clusters of sizes 39, 21, 35, 22, 45, 38
+
+high spending score - young (<25), low earners (<40k)
+high spending score - 25-40 years old, high earners (>70k)
+
+medium spending score - >40 years old, mid earners (40-70k)
+medium spending score - <=40 years old, mid earners (40-70k)
+
+low spening score - all ages, low earners (<40 k)
+low spending score - all ages, high earners (>70 k)
