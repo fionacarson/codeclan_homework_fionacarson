@@ -1,0 +1,183 @@
+---
+title: "Week 11 Day 5 Homework - Logistic Regression"
+output:
+  html_document:
+    toc: yes
+    toc_float: true
+    toc_depth: '2'
+    highlight: tango
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(glmulti)
+library(caret)
+library(modelr)
+library(pROC)
+library(GGally)
+```
+
+```{r}
+juice <- read_csv("data/orange_juice.csv") %>% 
+  clean_names()
+```
+
+```{r}
+juice_clean <- juice %>% 
+  mutate(purchase_mm = ifelse(purchase == "MM", "yes", "no"), .before = purchase) %>% 
+  # special_mm and special_ch removed as every observation is "yes"
+  select(-purchase, -special_ch, -special_mm)
+
+
+```
+
+**What to do about weekly data**
+
+```{r}
+ggplot(juice_clean, aes(weekof_purchase, fill = purchase_mm)) +
+  geom_bar()
+
+```
+
+The data covers a year but there is reallly no obvious pattern of which type of OJ is bought throughout the year. 
+There may be some differences in proportions for different quarters so lets convert the data to quarters. 
+
+```{r}
+juice_clean <- juice_clean %>% 
+  mutate(quarter_of_purchase = case_when(
+    weekof_purchase < 240 ~ "Q1",
+    weekof_purchase < 253 ~ "Q2",
+    weekof_purchase < 266 ~ "Q3",
+    TRUE ~ "Q4"
+  ), .before = "store_id") %>% 
+  select(-weekof_purchase)
+```
+
+Changing other variables to factors
+
+```{r}
+juice_clean <- juice_clean %>% 
+  mutate(purchase_mm = as_factor(purchase_mm),
+         quarter_of_purchase = as_factor(quarter_of_purchase),
+         store_id = as_factor(store_id))
+
+```
+
+
+```{r}
+alias(purchase_mm ~ ., data = juice_clean)
+```
+
+store is made from store_id and store7. I think I'll keep the store_id column. 
+list_price_diff is made up from the two price columns so we dont' need it
+price_diff is made up from 4 other columns, its complicated but I don't think we need it.
+Lastly, sale_price_mm and sale_price_ch are made up from the price and disc columns. Do we want to keep the sale price or the discount, lets keep sale price. 
+
+```{r}
+juice_clean <- juice_clean %>% 
+  select(-c(store, store7, list_price_diff, price_diff, disc_ch, disc_mm))
+```
+
+```{r}
+alias(purchase_mm ~ ., data = juice_clean)
+```
+
+No more alias'
+
+
+## Split Data
+
+```{r}
+train_index <- createDataPartition(juice_clean$purchase_mm,
+                                   p = 0.8,
+                                   list = FALSE, 
+                                   times = 1)
+
+train <- juice_clean[train_index, ]
+test <- juice_clean[-train_index, ]
+
+
+```
+
+
+```{r, message = FALSE}
+ggpairs(juice_clean, progress = FALSE)
+
+
+
+```
+
+
+
+## glmulti
+
+```{r}
+glmulti_search_all_mains <- glmulti(
+  purchase_mm ~ ., 
+  data = train,
+  level = 1,               # No interactions considered, main effects only
+  method = "h",            # Exhaustive approach
+  crit = "bic",            # BIC as criteria
+  confsetsize = 10,        # Keep 10 best models
+  plotty = F, 
+  report = T,              # No plots, but provide interim reports
+  fitfunction = "glm",     # glm function
+  family = binomial(link = "logit")) # binomial family for logistic regression
+
+summary(glmulti_search_all_mains)
+```
+
+```{r}
+glmulti_search_previous_mains_one_pair <- glmulti(
+  purchase_mm ~ 1 + loyal_ch + sale_price_mm + sale_price_ch, 
+  data = train,
+  level = 2,               # Interactions considered
+  method = "h",            # Exhaustive approach
+  crit = "bic",            # BIC as criteria
+  confsetsize = 10,        # Keep 10 best models
+  marginality = TRUE,      # consider pairs only if both main effects in model
+  minsize = 6,             # minsize, maxsize and marginality here force 
+  maxsize = 6,             # inclusion of a single pair beyond the five main effects
+  plotty = F, 
+  report = T,              # No plots, but provide interim reports
+  fitfunction = "glm",     # glm function
+  family = binomial(link = "logit")) # binomial family for logistic regression
+
+summary(glmulti_search_previous_mains_one_pair)
+
+```
+
+```{r}
+glmulti_search_previous_mains_one_pair@objects[[1]]
+```
+
+```{r}
+glmulti_interactions <- glm(purchase_mm ~ 1 + loyal_ch + sale_price_mm + sale_price_ch + sale_price_mm:loyal_ch + sale_price_ch:loyal_ch + sale_price_ch:sale_price_mm,
+                            data = juice_clean, 
+                            family = binomial(link = "logit"))
+
+
+juice_clean_pred_interactions <- juice_clean %>% 
+  add_predictions(glmulti_interactions, type = "response")
+
+roc_with_interactions <- juice_clean_pred_interactions %>% 
+  roc(response = purchase_mm, predictor = pred)
+
+
+ggroc(data = roc_with_interactions)
+
+
+threshold <-  0.5
+
+juice_clean_pred_interactions_thresh <- juice_clean_pred_interactions %>% 
+  mutate(pred_thresh_0.5 = pred >= threshold)
+  
+conf_table <- juice_clean_pred_interactions_thresh %>%
+  tabyl(purchase_mm, pred_thresh_0.5)
+
+conf_table
+```
+
+
