@@ -113,6 +113,8 @@ ggpairs(juice_clean, progress = FALSE)
 
 ## glmulti
 
+Running an exhaustive search (ie all possible models) over all "main effects only" logistic regression models using BIC as the quality metric. 
+
 ```{r}
 glmulti_search_all_mains <- glmulti(
   purchase_mm ~ ., 
@@ -128,6 +130,13 @@ glmulti_search_all_mains <- glmulti(
 
 summary(glmulti_search_all_mains)
 ```
+
+$bestmodel
+[1] "purchase_mm ~ 1 + loyal_ch + sale_price_mm + sale_price_ch"
+
+Got the main effects from glmulti_search_all_mains run above. 
+Input this model into code below to find interactions. 
+
 
 ```{r}
 glmulti_search_previous_mains_one_pair <- glmulti(
@@ -148,6 +157,8 @@ glmulti_search_previous_mains_one_pair <- glmulti(
 summary(glmulti_search_previous_mains_one_pair)
 
 ```
+
+The notes suggest this should find one interaction but it has come up with 3. 
 
 ```{r}
 glmulti_search_previous_mains_one_pair@objects[[1]]
